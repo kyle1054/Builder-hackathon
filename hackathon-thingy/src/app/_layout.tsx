@@ -1,4 +1,4 @@
-import { DarkTheme, ThemeProvider } from 'expo-router';
+import { DefaultTheme, ThemeProvider } from 'expo-router';
 import { StatusBar } from 'expo-status-bar';
 import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
 
@@ -8,14 +8,14 @@ import { AuthProvider } from '@/context/auth';
 import { DemoJourneyProvider } from '@/context/demo-journey';
 
 const sideQuestTheme = {
-  ...DarkTheme,
+  ...DefaultTheme,
   colors: {
-    ...DarkTheme.colors,
+    ...DefaultTheme.colors,
     primary: SideQuestColors.gold,
     background: SideQuestColors.void,
-    card: SideQuestColors.ink,
-    text: SideQuestColors.white,
-    border: SideQuestColors.white,
+    card: SideQuestColors.surface,
+    text: SideQuestColors.text,
+    border: SideQuestColors.border,
     notification: SideQuestColors.red,
   },
 };
@@ -26,7 +26,7 @@ export default function RootLayout() {
       <ThemeProvider value={sideQuestTheme}>
         <AuthProvider>
           <DemoJourneyProvider>
-            <StatusBar style="light" />
+            <StatusBar style="dark" />
             <AppTabs />
           </DemoJourneyProvider>
         </AuthProvider>

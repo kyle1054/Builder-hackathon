@@ -1,0 +1,18 @@
+import assert from 'node:assert/strict';
+import { routePosition, selectRouteStops } from '../src/services/route-planning.ts';
+const route={coordinates:[[19,-34],[20,-34]],distanceKm:100,minutes:180};
+const position=routePosition(route,19.5,-34);
+assert.ok(Math.abs(position.routeKm-50)<.01);
+assert.equal(position.offsetKm,0);
+assert.ok(routePosition(route,19.5,-35).offsetKm>100);
+const stop=(id,kind,routeKm)=>({id,kind,routeKm,title:id,description:'',duration:kind==='food'?30:15,included:true,place:{name:id,latitude:-34,longitude:19+routeKm/100,span:.01}});
+const candidates=[stop('fuel','fuel',30),stop('cafe','food',35),stop('view','scenic',65)];
+const plan={interests:['Food','Scenic']};
+const chosen=selectRouteStops(plan,route,candidates);
+assert.ok(chosen.activities.length);
+assert.ok(!chosen.activities.some(s=>s.kind==='fuel'),'Fuel is optional, never auto-added');
+assert.deepEqual(chosen,selectRouteStops(plan,route,candidates),'Identical inputs are deterministic');
+assert.deepEqual(selectRouteStops(plan,{...route,minutes:20},candidates).activities,[],'Short drives do not get artificial stops');
+assert.ok(selectRouteStops(plan,route,[]).warnings.length,'Missing break places are explained');
+assert.deepEqual(chosen.activities.map(s=>s.routeKm),chosen.activities.map(s=>s.routeKm).sort((a,b)=>a-b));
+console.log('Route projection, deterministic selection, short routes, missing places and optional fuel: passed');

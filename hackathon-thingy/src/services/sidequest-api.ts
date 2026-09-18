@@ -179,6 +179,7 @@ export async function uploadChroniclePhoto(input: {
   });
 
   if (finalizeError) throw finalizeError;
+  if (!(finalized as {ok?: boolean})?.ok) throw new Error('The photo uploaded but could not be added to the album. Please retry.');
   return { reservation, finalized };
 }
 

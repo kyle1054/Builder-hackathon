@@ -23,7 +23,7 @@ export default function AppTabs() {
         tabBarActiveTintColor: SideQuestColors.goldSoft,
         tabBarInactiveTintColor: SideQuestColors.textDim,
         tabBarStyle: {
-          backgroundColor: '#0B1018',
+          backgroundColor: SideQuestColors.surface,
           borderTopColor: SideQuestColors.border,
           borderTopWidth: 1,
           height: 76,
@@ -43,6 +43,14 @@ export default function AppTabs() {
           tabBarStyle: { display: 'none' },
         }}
       />
+      <Tabs.Screen name="auth-callback" options={{ href: null, tabBarStyle: { display: 'none' } }} />
+      <Tabs.Screen name="reset-password" options={{ href: null, tabBarStyle: { display: 'none' } }} />
+      <Tabs.Screen name="history" options={{ href: null, tabBarStyle: { display: 'none' } }} />
+      <Tabs.Screen name="plan" options={{ href: null, tabBarStyle: { display: 'none' } }} />
+      <Tabs.Screen name="join" options={{ href: null, tabBarStyle: { display: 'none' } }} />
+      <Tabs.Screen name="games" options={{ href: null, tabBarStyle: { display: 'none' } }} />
+      <Tabs.Screen name="places" options={{ href: null, tabBarStyle: { display: 'none' } }} />
+      <Tabs.Screen name="trip" options={{ href: null, tabBarStyle: { display: 'none' } }} />
       <Tabs.Screen
         name="journey"
         options={{

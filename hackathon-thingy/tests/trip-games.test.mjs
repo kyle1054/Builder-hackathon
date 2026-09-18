@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import { tripQuestions,quizScore,bingoLines,parseProgress } from '../src/services/trip-games.ts';
+import { distanceKm } from '../src/constants/landmark-facts.ts';
+const quiz=tripQuestions('Stellenbosch','Tierfontein Farm','Elgin Valley');
+assert.equal(quizScore(quiz,quiz.map(q=>q.correct)),50);
+assert.equal(quizScore(quiz,[null,null,null,null,null]),0);
+assert.equal(bingoLines([0,1,2,4]).length,1);
+assert.equal(bingoLines([0,4,8]).length,1);
+assert.equal(bingoLines([0,1,4]).length,0);
+assert.equal(bingoLines([0,1,2,3,4,5,6,7,8]).length,8);
+assert.deepEqual(parseProgress('not json').bingo,[4]);
+assert.deepEqual(parseProgress(JSON.stringify({version:1,answers:[99,null,1],bingo:[4,4,99,-1,0],best:999})),{version:1,answers:[null,1],bingo:[4,0],best:50});
+assert.equal(distanceKm({latitude:-34,longitude:19},{latitude:-34,longitude:19}),0);
+assert.ok(distanceKm({latitude:0,longitude:0},{latitude:1,longitude:0})>110);
+console.log('Trivia scoring, skips, bingo lines, storage validation and proximity distance passed.');

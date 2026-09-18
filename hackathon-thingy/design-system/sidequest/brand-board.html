@@ -1,0 +1,453 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>SideQuest — Brand Identity</title>
+<style>
+  :root{
+    --void:#080B12; --ink:#0C1018; --navy:#111827; --navyBright:#182234;
+    --cobaltDark:#27405A; --cobalt:#7FA8C9; --emerald:#75C69D; --amber:#DFA45B;
+    --gold:#D8B477; --goldSoft:#F0D7AA; --red:#D86E78; --white:#F5F1E8; --muted:#A9B0BE;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{
+    background:var(--void); color:var(--white);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Inter,Roboto,sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  .page{width:1280px;padding:56px 40px 64px;margin:0 auto}
+  .eyebrow{
+    font-size:11px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--gold);font-weight:700;margin-bottom:14px;
+  }
+  h2{font-size:26px;font-weight:700;letter-spacing:-.01em;margin-bottom:6px}
+  .sub{color:var(--muted);font-size:14px;line-height:1.55;max-width:760px}
+  section{margin-top:56px}
+  .rule{height:1px;background:var(--cobaltDark);margin-top:26px;opacity:.7}
+  .grid{display:grid;gap:16px}
+  .panel{
+    background:var(--navy);border:1px solid var(--cobaltDark);border-radius:14px;padding:24px;
+  }
+  .panel.sunken{background:var(--ink)}
+  .cap{font-size:11px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:650}
+  canvas{image-rendering:pixelated;display:block}
+
+  /* header */
+  .hero{display:flex;align-items:center;gap:28px}
+  .hero .tag{font-size:15px;color:var(--muted);line-height:1.5}
+  .hero .tag b{color:var(--goldSoft);font-weight:650}
+
+  /* swatches */
+  .sw{border-radius:12px;overflow:hidden;border:1px solid var(--cobaltDark)}
+  .sw .chip{height:82px}
+  .sw .meta{background:var(--navy);padding:10px 12px}
+  .sw .nm{font-size:12.5px;font-weight:650}
+  .sw .hx{font-size:11px;color:var(--muted);font-family:ui-monospace,SFMono-Regular,Menlo,monospace;margin-top:3px}
+
+  /* type */
+  .t-row{display:flex;align-items:baseline;gap:20px;padding:11px 0;border-bottom:1px solid rgba(39,64,90,.5)}
+  .t-row:last-child{border-bottom:0}
+  .t-lab{width:150px;flex:none;font-size:11px;color:var(--muted);letter-spacing:.08em;text-transform:uppercase;font-weight:650}
+
+  /* voice */
+  .v{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+  .v .cell{border-radius:11px;padding:15px 17px;font-size:14px;line-height:1.5}
+  .v .do{background:rgba(117,198,157,.09);border:1px solid rgba(117,198,157,.32)}
+  .v .no{background:rgba(216,110,120,.08);border:1px solid rgba(216,110,120,.3)}
+  .v .mk{font-size:11px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;display:block;margin-bottom:7px}
+  .v .do .mk{color:var(--emerald)} .v .no .mk{color:var(--red)}
+  .v .no span.txt{color:var(--muted);text-decoration:line-through;text-decoration-color:rgba(216,110,120,.5)}
+
+  /* phone */
+  .phone{
+    width:322px;border-radius:38px;background:var(--void);
+    border:8px solid #1b2433;box-shadow:0 22px 60px rgba(0,0,0,.6);
+    overflow:hidden;flex:none;
+  }
+  .status{display:flex;justify-content:space-between;padding:13px 20px 6px;font-size:11px;color:var(--muted);font-weight:600}
+  .ph-body{padding:6px 16px 0}
+  .ph-eyebrow{font-size:10px;letter-spacing:.16em;text-transform:uppercase;color:var(--gold);font-weight:700}
+  .ph-h{font-size:22px;font-weight:700;margin-top:5px;letter-spacing:-.015em}
+  .ph-sub{font-size:12px;color:var(--muted);margin-top:4px}
+  .track{height:7px;border-radius:4px;background:var(--navyBright);margin-top:15px;position:relative;overflow:hidden}
+  .track i{position:absolute;inset:0 auto 0 0;width:42%;background:linear-gradient(90deg,var(--cobalt),var(--gold));border-radius:4px}
+  .ph-card{background:var(--navy);border:1px solid var(--cobaltDark);border-radius:13px;padding:13px;margin-top:13px}
+  .ph-card.live{border-color:var(--gold);background:var(--navyBright);box-shadow:0 0 0 3px rgba(216,180,119,.13)}
+  .ph-row{display:flex;gap:11px;align-items:flex-start}
+  .ph-t{font-size:13.5px;font-weight:650;line-height:1.3}
+  .ph-m{font-size:11px;color:var(--muted);margin-top:3px;line-height:1.4}
+  .pill{display:inline-block;font-size:9.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+        padding:3px 7px;border-radius:5px;background:rgba(223,164,91,.15);color:var(--amber);margin-bottom:6px}
+  .cta{margin-top:11px;background:var(--gold);color:var(--void);text-align:center;font-weight:700;
+       font-size:13px;padding:11px;border-radius:9px}
+  .ghost{margin-top:7px;border:1px solid var(--cobaltDark);color:var(--goldSoft);text-align:center;
+       font-weight:650;font-size:12.5px;padding:9px;border-radius:9px}
+  .vitals{display:flex;gap:9px;margin-top:13px}
+  .vital{flex:1;background:var(--navy);border:1px solid var(--cobaltDark);border-radius:10px;padding:9px 10px}
+  .vital .k{font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);font-weight:700}
+  .vital .bar{height:4px;border-radius:3px;background:var(--navyBright);margin-top:7px;overflow:hidden}
+  .vital .bar i{display:block;height:100%;border-radius:3px}
+  .tabs{display:flex;justify-content:space-around;padding:12px 0 16px;margin-top:14px;
+        background:var(--ink);border-top:1px solid var(--cobaltDark)}
+  .tab{display:flex;flex-direction:column;align-items:center;gap:5px;font-size:9.5px;font-weight:650;color:var(--muted)}
+  .tab.on{color:var(--goldSoft)}
+
+  .icon-cell{display:flex;flex-direction:column;align-items:center;gap:9px;
+    background:var(--navy);border:1px solid var(--cobaltDark);border-radius:12px;padding:16px 8px}
+  .icon-cell .lb{font-size:10.5px;color:var(--muted);letter-spacing:.06em;text-transform:uppercase;font-weight:650}
+
+  .ratio{display:flex;height:40px;border-radius:9px;overflow:hidden;border:1px solid var(--cobaltDark);margin-top:14px}
+  .ratio div{display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;letter-spacing:.08em}
+</style>
+</head>
+<body>
+<div class="page">
+
+  <!-- ══════════ HEADER ══════════ -->
+  <div class="hero">
+    <canvas id="mark-hero"></canvas>
+    <div>
+      <canvas id="wordmark-hero"></canvas>
+      <div class="tag" style="margin-top:14px">
+        <b>Maps get you there. SideQuest makes it worth the drive.</b><br>
+        Brand &amp; corporate identity — v1 · 18 Sep 2026
+      </div>
+    </div>
+  </div>
+  <div class="rule"></div>
+
+  <!-- ══════════ IDEA ══════════ -->
+  <section>
+    <div class="eyebrow">01 — The idea</div>
+    <h2>It's about the journey, not the destination.</h2>
+    <p class="sub">Every navigation app optimises for arrival time, so the country you drive through becomes
+    scenery behind glass. SideQuest optimises for the opposite: the <b style="color:var(--goldSoft)">main quest</b>
+    is getting there, the <b style="color:var(--goldSoft)">side quests</b> are everything worth stopping for on the way.
+    The mark is that sentence drawn — a road running to the horizon, and the thing off to the side you'd have missed.</p>
+  </section>
+
+  <!-- ══════════ MARK ══════════ -->
+  <section>
+    <div class="eyebrow">02 — The mark</div>
+    <div class="grid" style="grid-template-columns:400px 1fr;align-items:stretch">
+      <div class="panel" style="display:flex;align-items:center;justify-content:center">
+        <canvas id="mark-big"></canvas>
+      </div>
+      <div class="grid" style="grid-template-columns:repeat(4,1fr)">
+        <div class="icon-cell"><canvas id="mark-v1"></canvas><span class="lb">Primary</span></div>
+        <div class="icon-cell"><canvas id="mark-v2"></canvas><span class="lb">Gold mono</span></div>
+        <div class="icon-cell"><canvas id="mark-v3"></canvas><span class="lb">Parchment</span></div>
+        <div class="icon-cell" style="background:var(--white)"><canvas id="mark-v4"></canvas><span class="lb" style="color:#4a5566">On light</span></div>
+        <div class="icon-cell" style="grid-column:span 2"><canvas id="mark-app"></canvas><span class="lb">App icon · 1024</span></div>
+        <div class="icon-cell"><canvas id="mark-32"></canvas><span class="lb">32px</span></div>
+        <div class="icon-cell"><canvas id="mark-16"></canvas><span class="lb">16px favicon</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ══════════ LOCKUPS ══════════ -->
+  <section>
+    <div class="eyebrow">03 — Wordmark &amp; lockups</div>
+    <div class="grid" style="grid-template-columns:1fr 1fr 1fr">
+      <div class="panel" style="display:flex;align-items:center;justify-content:center;min-height:150px">
+        <div style="display:flex;align-items:center;gap:14px">
+          <canvas id="lk-mark"></canvas><canvas id="lk-word"></canvas>
+        </div>
+      </div>
+      <div class="panel" style="display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;min-height:150px">
+        <canvas id="lk-mark2"></canvas><canvas id="lk-word2"></canvas>
+      </div>
+      <div class="panel sunken" style="display:flex;align-items:center;justify-content:center;min-height:150px">
+        <canvas id="lk-word3"></canvas>
+      </div>
+    </div>
+    <p class="sub" style="margin-top:14px">Letterforms are a 5×7 bitmap grid — the wordmark <i>is</i> pixel art, which is why
+    the rest of the system doesn't need to be. <b style="color:var(--goldSoft)">SIDE</b> in parchment,
+    <b style="color:var(--gold)">QUEST</b> in gold: the detour is the part that lights up.
+    Clear space on all sides = the height of one letter. Never below 16px. Never recoloured outside the palette.</p>
+  </section>
+
+  <!-- ══════════ PALETTE ══════════ -->
+  <section>
+    <div class="eyebrow">04 — Palette · night drive, warm dashboard light</div>
+    <div class="grid" style="grid-template-columns:repeat(6,1fr)" id="swatches"></div>
+    <p class="sub" style="margin-top:14px">Foreground white is <b style="color:var(--goldSoft)">parchment #F5F1E8</b>,
+    never pure #FFFFFF — that single choice carries most of the warmth. Gold is the only CTA colour;
+    never place two golds in competition on one screen. Dark is the only mode.</p>
+  </section>
+
+  <!-- ══════════ TYPE ══════════ -->
+  <section>
+    <div class="eyebrow">05 — Typography</div>
+    <div class="panel">
+      <div class="t-row"><div class="t-lab">Display / 34 / 700</div><div style="font-size:34px;font-weight:700;letter-spacing:-.02em">Small moments, kept.</div></div>
+      <div class="t-row"><div class="t-lab">Title / 24 / 700</div><div style="font-size:24px;font-weight:700;letter-spacing:-.015em">Houw Hoek Pass</div></div>
+      <div class="t-row"><div class="t-lab">Body / 16 / 400</div><div style="font-size:16px;line-height:1.5">There's an orchard six minutes off the road. Worth the stop.</div></div>
+      <div class="t-row"><div class="t-lab">Muted / 14 / 400</div><div style="font-size:14px;color:var(--muted)">39 km left · 38 min · Navigator is deciding</div></div>
+      <div class="t-row"><div class="t-lab">Eyebrow / 11 / 700</div><div style="font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--gold);font-weight:700">Quest offered</div></div>
+      <div class="t-row"><div class="t-lab">Pixel accent</div><div style="display:flex;align-items:center;gap:14px"><canvas id="ty-px"></canvas><span style="font-size:12px;color:var(--muted)">numerals &amp; badges only — never body copy</span></div></div>
+    </div>
+    <p class="sub" style="margin-top:14px">System sans throughout (SF Pro / Roboto): it renders instantly, respects the user's
+    accessibility text size, and keeps the pixel accents feeling deliberate rather than like one more novelty typeface.</p>
+  </section>
+
+  <!-- ══════════ PIXEL RULE ══════════ -->
+  <section>
+    <div class="eyebrow">06 — The 20% pixel rule</div>
+    <h2>Pixel art is a texture, not a theme.</h2>
+    <p class="sub">It carries personality at roughly one-fifth of the screen. The contrast between crisp,
+    modern chrome and chunky pixel accents <i>is</i> the look — go past it and you lose both the charm and the legibility.</p>
+    <div class="ratio">
+      <div style="flex:20;background:var(--gold);color:var(--void)">20% PIXEL</div>
+      <div style="flex:80;background:var(--navy);color:var(--muted)">80% CLEAN, LEGIBLE UI</div>
+    </div>
+    <div class="grid" style="grid-template-columns:repeat(6,1fr);margin-top:18px" id="icons"></div>
+    <div class="v" style="margin-top:16px">
+      <div class="cell do"><span class="mk">✓ Pixels live here</span>
+        Quest &amp; place icons · badges and XP rewards · the vehicle marker on the route ·
+        journal stamps and frames · empty states · arrival celebrations</div>
+      <div class="cell no"><span class="mk">✕ Never here</span>
+        <span class="txt">Body text · form fields · buttons · navigation chrome · the map itself ·
+        anything on the Pilot's screen · anything under 24px</span></div>
+    </div>
+  </section>
+
+  <!-- ══════════ VOICE ══════════ -->
+  <section>
+    <div class="eyebrow">07 — Voice</div>
+    <h2>A friend who knows the area and thinks you should pull over.</h2>
+    <p class="sub">Warm, curious, slightly wry. Short sentences, second person. Real place names do the work —
+    we never invent lore, and we never narrate like a dungeon master.</p>
+    <div class="v" style="margin-top:18px">
+      <div class="cell do"><span class="mk">Say this</span>“There's an orchard 6 minutes off the road.”</div>
+      <div class="cell no"><span class="mk">Not this</span><span class="txt">“A hidden orchard appears on the quest radar.”</span></div>
+      <div class="cell do"><span class="mk">Say this</span>“You stopped for the pie. Correct decision.”</div>
+      <div class="cell no"><span class="mk">Not this</span><span class="txt">“Tavern rest complete. Well Rested buff gained.”</span></div>
+      <div class="cell do"><span class="mk">Say this</span>“Worth the stop. Trust us.”</div>
+      <div class="cell no"><span class="mk">Not this</span><span class="txt">“Mountain mist reveals an old traveler's riddle.”</span></div>
+    </div>
+  </section>
+
+  <!-- ══════════ IN SITU ══════════ -->
+  <section>
+    <div class="eyebrow">08 — Identity in application</div>
+    <div style="display:flex;gap:34px;align-items:flex-start">
+      <div class="phone">
+        <div class="status"><span>9:41</span><span>Elgin Valley · 74 km left</span></div>
+        <div class="ph-body">
+          <div class="ph-eyebrow">Main quest</div>
+          <div class="ph-h">Cape Town → Greyton</div>
+          <div class="ph-sub">1h 06m to go · 30 min detour budget</div>
+          <div class="track"><i></i></div>
+
+          <div class="ph-card live">
+            <div class="ph-row">
+              <canvas id="q-icon"></canvas>
+              <div>
+                <span class="pill">Side quest · 6 min off route</span>
+                <div class="ph-t">Peregrine Farm Stall</div>
+                <div class="ph-m">There's an orchard six minutes off the road. They do the pie you keep talking about.</div>
+              </div>
+            </div>
+            <div class="cta">Take the detour</div>
+            <div class="ghost">Keep driving</div>
+          </div>
+
+          <div class="vitals">
+            <div class="vital"><div class="k">Fuel</div><div class="bar"><i style="width:58%;background:var(--emerald)"></i></div></div>
+            <div class="vital"><div class="k">Snacks</div><div class="bar"><i style="width:63%;background:var(--amber)"></i></div></div>
+            <div class="vital"><div class="k">Alert</div><div class="bar"><i style="width:74%;background:var(--cobalt)"></i></div></div>
+          </div>
+
+          <div class="ph-card" style="display:flex;align-items:center;gap:11px">
+            <canvas id="q-badge"></canvas>
+            <div><div class="ph-t">3 moments kept</div><div class="ph-m">Private to your party · Kyle &amp; Sam</div></div>
+          </div>
+        </div>
+        <div class="tabs">
+          <div class="tab on"><canvas id="tb1"></canvas>Journey</div>
+          <div class="tab"><canvas id="tb2"></canvas>Party</div>
+          <div class="tab"><canvas id="tb3"></canvas>Journal</div>
+          <div class="tab"><canvas id="tb4"></canvas>You</div>
+        </div>
+      </div>
+
+      <div style="flex:1;display:flex;flex-direction:column;gap:16px">
+        <div class="panel" style="display:flex;align-items:center;gap:24px">
+          <canvas id="splash"></canvas>
+          <div><div class="cap" style="margin-bottom:7px">Splash / launch</div>
+          <div style="font-size:14px;color:var(--muted);line-height:1.55">Mark on void, gold sparkle animating in last.
+          Background <code style="color:var(--goldSoft);font-family:ui-monospace,Menlo,monospace">#05051A</code> per <code style="color:var(--goldSoft);font-family:ui-monospace,Menlo,monospace">app.json</code>.</div></div>
+        </div>
+        <div class="panel">
+          <div class="cap" style="margin-bottom:13px">Badges &amp; rewards — the only place pixels get loud</div>
+          <div class="grid" style="grid-template-columns:repeat(4,1fr)" id="badges"></div>
+        </div>
+        <div class="panel">
+          <div class="cap" style="margin-bottom:12px">What this identity refuses to be</div>
+          <div style="font-size:14px;color:var(--muted);line-height:1.85">
+            ✕ &nbsp;A navigation app — we assume Maps is already running<br>
+            ✕ &nbsp;A review app — no stars, no feeds, no “top 10 near you”<br>
+            ✕ &nbsp;A social network — the journal is private to the car<br>
+            ✕ &nbsp;A fantasy RPG — that was a costume, and it's off<br>
+            ✕ &nbsp;A solo experience — two people is the design centre
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+const C={r:'#F5F1E8',g:'#D8B477',G:'#F0D7AA',c:'#7FA8C9',b:'#27405A',d:'#080B12',
+         e:'#75C69D',a:'#DFA45B',n:'#111827',w:'#182234',R:'#D86E78',k:'#0C1018'};
+
+function draw(id,rows,px,map,bg,pad){
+  const cv=document.getElementById(id); if(!cv) return;
+  pad=pad||0; const w=rows[0].length, h=rows.length;
+  const dpr=3;
+  cv.width=(w*px+pad*2)*dpr; cv.height=(h*px+pad*2)*dpr;
+  cv.style.width=(w*px+pad*2)+'px'; cv.style.height=(h*px+pad*2)+'px';
+  const x=cv.getContext('2d'); x.scale(dpr,dpr); x.imageSmoothingEnabled=false;
+  if(bg){x.fillStyle=bg;x.fillRect(0,0,w*px+pad*2,h*px+pad*2);}
+  for(let r=0;r<h;r++)for(let c=0;c<w;c++){
+    const ch=rows[r][c]; if(ch==='.')continue;
+    const col=(map&&map[ch])||C[ch]; if(!col)continue;
+    x.fillStyle=col; x.fillRect(pad+c*px,pad+r*px,px,px);
+  }
+}
+
+/* ── the mark: a road running to the horizon + the thing off to the side ──
+   Edges and centre dashes in parchment, asphalt in cobalt-dark, sparkle in gold. */
+const MARK=(function(){
+  const L=[4,4,4,3,3,3,2,2,2,1,1,1,0,0,0,0];
+  const R=[8,8,9,9,9,10,10,10,11,11,11,11,11,11,11,11];
+  const dash=[1,2,5,6,9,10,13,14];
+  const g=[];
+  for(let r=0;r<16;r++){
+    const row=new Array(16).fill('.');
+    for(let c=L[r];c<=R[r];c++) row[c]='b';
+    row[L[r]]='r'; row[R[r]]='r';
+    if(dash.indexOf(r)>=0) row[Math.round((L[r]+R[r])/2)]='r';
+    g.push(row);
+  }
+  [1,2,4,5].forEach(r=>g[r][13]='g');
+  for(let c=11;c<=15;c++) g[3][c]='g';
+  return g.map(r=>r.join(''));
+})();
+/* mono: drop the asphalt, keep the road edges, dashes and sparkle */
+const mono=(rows,ch)=>rows.map(r=>r.split("").map(p=>(p==='.'||p==='b')?'.':ch).join(""));
+
+/* 5x7 bitmap font */
+const F={
+ S:[".XXXX","X....","X....",".XXX.","....X","....X","XXXX."],
+ I:["XXXXX","..X..","..X..","..X..","..X..","..X..","XXXXX"],
+ D:["XXXX.","X...X","X...X","X...X","X...X","X...X","XXXX."],
+ E:["XXXXX","X....","X....","XXXX.","X....","X....","XXXXX"],
+ Q:[".XXX.","X...X","X...X","X...X","X.X.X","X..X.",".XX.X"],
+ U:["X...X","X...X","X...X","X...X","X...X","X...X",".XXX."],
+ T:["XXXXX","..X..","..X..","..X..","..X..","..X..","..X.."],
+ "3":["XXXXX","....X","..XX.","....X","....X","X...X",".XXX."],
+ "0":[".XXX.","X...X","X..XX","X.X.X","XX..X","X...X",".XXX."],
+ "2":[".XXX.","X...X","....X","...X.","..X..",".X...","XXXXX"],
+ "%":["X...X","X..X.","...X.","..X..",".X...",".X..X","X...X"]
+};
+function textRows(str,cols){
+  const out=Array.from({length:7},()=>[]);
+  str.split("").forEach((ch,i)=>{
+    const col=cols[i]||'r';
+    if(ch===' '){for(let r=0;r<7;r++)out[r].push("..");return;}
+    const gl=F[ch]; for(let r=0;r<7;r++){
+      out[r].push(gl[r].split("").map(p=>p==='X'?col:'.').join(""));
+      out[r].push(".");
+    }
+  });
+  return out.map(r=>r.join(""));
+}
+const WORD=textRows("SIDEQUEST",['r','r','r','r','g','g','g','g','g']);
+
+/* icons 8x8 */
+const IC={
+ scenic:["........","...r....","..rrr...","..rrr...",".rrrrr..","rrrrrrr.","rrrrrrrr","........"],
+ food:  [".r....r.",".r.r..r.",".r.r..r.",".rrr..r.","..r...r.","..r...r.","..r...r.","........"],
+ lore:  ["........",".rrrrrr.",".r....r.",".r.rr.r.",".r....r.",".r.rr.r.",".rrrrrr.","........"],
+ curio: ["........","..rrr...",".r...r..",".....r..","....r...","....r...","........","....r..."],
+ car:   ["........","........","..rrrr..",".rrrrrr.","rrrrrrrr","rrrrrrrr",".r....r.","........"],
+ camera:["........","..rr....","rrrrrrr.","r.....r.","r..rr.r.","r..rr.r.","r.....r.","rrrrrrr."],
+ party: ["..r..r..",".rrr.rr.","..r..r..","........","..r..r..",".rrr.rr.",".r.r.r.r","........"],
+ book:  [".rrr.rrr",".r.r.r.r",".r.r.r.r",".r.r.r.r",".r.r.r.r",".r.r.r.r",".rrr.rrr","........"],
+ you:   ["...rr...","..rrrr..","...rr...","........","..rrrr..",".rrrrrr.","rrrrrrrr","........"],
+ star:  ["...r....","...r....","...r....","rrrrrrr.","...r....","...r....","...r....","........"],
+ flag:  ["..r.....","..rrrr..","..r..r..","..rrrr..","..r.....","..r.....","..r.....","........"],
+ trophy:[".rrrrrr.","r.rrrr.r","r.rrrr.r",".rrrrrr.","...rr...","..rrrr..",".rrrrrr.","........"]
+};
+const recolor=(rows,ch)=>rows.map(r=>r.split("").map(p=>p==='.'?'.':ch).join(""));
+
+/* ── render ── */
+draw('mark-hero',MARK,4.5);
+draw('wordmark-hero',WORD,5);
+
+draw('mark-big',MARK,14);
+draw('mark-v1',MARK,3.2);
+draw('mark-v2',mono(MARK,'g'),3.2);
+draw('mark-v3',mono(MARK,'r'),3.2);
+draw('mark-v4',mono(MARK,'d'),3.2);
+draw('mark-32',MARK,2);
+draw('mark-16',MARK,1);
+
+/* app icon: mark on ink with gold edge feel */
+(function(){
+  const cv=document.getElementById('mark-app');const px=5.6,pad=13,dpr=3,w=16*px+pad*2;
+  cv.width=w*dpr;cv.height=w*dpr;cv.style.width=w+'px';cv.style.height=w+'px';
+  const x=cv.getContext('2d');x.scale(dpr,dpr);
+  const gr=x.createLinearGradient(0,0,w,w);gr.addColorStop(0,'#141d2e');gr.addColorStop(1,'#080B12');
+  x.fillStyle=gr;x.beginPath();x.roundRect(0,0,w,w,w*0.225);x.fill();
+  for(let r=0;r<16;r++)for(let c=0;c<16;c++){const ch=MARK[r][c];if(ch==='.')continue;
+    x.fillStyle=C[ch];x.fillRect(pad+c*px,pad+r*px,px,px);}
+})();
+
+draw('lk-mark',MARK,4); draw('lk-word',WORD,4.4);
+draw('lk-mark2',MARK,4); draw('lk-word2',WORD,3.6);
+draw('lk-word3',recolor(WORD.map(r=>r),'r'),4.4);
+
+draw('ty-px',textRows("320 %",['g','g','g','r','g']),4);
+
+/* swatches */
+const SW=[["Void","#080B12"],["Ink","#0C1018"],["Navy","#111827"],["Navy Bright","#182234"],["Cobalt Dark","#27405A"],["Cobalt","#7FA8C9"],
+          ["Emerald","#75C69D"],["Amber","#DFA45B"],["Gold · CTA","#D8B477"],["Gold Soft","#F0D7AA"],["Red","#D86E78"],["Parchment","#F5F1E8"]];
+document.getElementById('swatches').innerHTML=SW.map(([n,h])=>
+ `<div class="sw"><div class="chip" style="background:${h}"></div><div class="meta"><div class="nm">${n}</div><div class="hx">${h}</div></div></div>`).join('');
+
+/* icon row */
+const IR=[["scenic","Scenic"],["food","Food"],["lore","Lore"],["curio","Curiosity"],["car","Marker"],["camera","Capture"]];
+document.getElementById('icons').innerHTML=IR.map(([k,l])=>
+ `<div class="icon-cell"><canvas id="ic-${k}"></canvas><span class="lb">${l}</span></div>`).join('');
+IR.forEach(([k])=>draw('ic-'+k,recolor(IC[k],'g'),6));
+
+/* badges */
+const BD=[["star","First detour","g"],["flag","Made it","e"],["trophy","5 quests","a"],["camera","Chronicler","c"]];
+document.getElementById('badges').innerHTML=BD.map(([k,l])=>
+ `<div class="icon-cell"><canvas id="bd-${k}"></canvas><span class="lb">${l}</span></div>`).join('');
+BD.forEach(([k,l,col])=>draw('bd-'+k,recolor(IC[k],col),6));
+
+/* phone bits */
+draw('q-icon',recolor(IC.food,'g'),4.4);
+draw('q-badge',recolor(IC.camera,'c'),3.6);
+draw('tb1',recolor(IC.car,'G'),2.4);
+draw('tb2',recolor(IC.party,'r'),2.4);
+draw('tb3',recolor(IC.book,'r'),2.4);
+draw('tb4',recolor(IC.you,'r'),2.4);
+
+/* splash */
+(function(){
+  const cv=document.getElementById('splash');const px=4,pad=26,dpr=3,w=16*px+pad*2,h=16*px+pad*2;
+  cv.width=w*dpr;cv.height=h*dpr;cv.style.width=w+'px';cv.style.height=h+'px';
+  const x=cv.getContext('2d');x.scale(dpr,dpr);
+  x.fillStyle='#05051A';x.beginPath();x.roundRect(0,0,w,h,16);x.fill();
+  for(let r=0;r<16;r++)for(let c=0;c<16;c++){const ch=MARK[r][c];if(ch==='.')continue;
+    x.fillStyle=C[ch];x.fillRect(pad+c*px,pad+r*px,px,px);}
+})();
+</script>
+</body>
+</html>

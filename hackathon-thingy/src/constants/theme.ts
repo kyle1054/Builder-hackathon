@@ -3,49 +3,50 @@
  * There are many other ways to style your app. For example, [Nativewind](https://www.nativewind.dev/), [Tamagui](https://tamagui.dev/), [unistyles](https://reactnativeunistyles.vercel.app), etc.
  */
 
-import '@/global.css';
+import "@/global.css";
 
-import { Platform } from 'react-native';
+import { Platform } from "react-native";
 
 export const Colors = {
   light: {
-    text: '#F5F1E8',
-    background: '#080B12',
-    backgroundElement: '#141A25',
-    backgroundSelected: '#20293A',
-    textSecondary: '#A9B0BE',
+    text: "#20392F",
+    background: "#F6F7F2",
+    backgroundElement: "#FFFFFF",
+    backgroundSelected: "#E6EDE3",
+    textSecondary: "#5F6F65",
   },
   dark: {
-    text: '#F5F1E8',
-    background: '#080B12',
-    backgroundElement: '#141A25',
-    backgroundSelected: '#20293A',
-    textSecondary: '#A9B0BE',
+    text: "#F5F1E8",
+    background: "#080B12",
+    backgroundElement: "#141A25",
+    backgroundSelected: "#20293A",
+    textSecondary: "#A9B0BE",
   },
 } as const;
 
 export const SideQuestColors = {
-  void: '#080B12',
-  ink: '#0C1018',
-  navy: '#111827',
-  navyBright: '#182234',
-  cobaltDark: '#27405A',
-  cobalt: '#7FA8C9',
-  emerald: '#75C69D',
-  amber: '#DFA45B',
-  gold: '#D8B477',
-  goldSoft: '#F0D7AA',
-  red: '#D86E78',
-  white: '#F5F1E8',
-  textMuted: '#A9B0BE',
-  textDim: '#737C8D',
-  road: '#566174',
-  surface: '#121823',
-  surfaceRaised: '#18202D',
-  surfaceSoft: '#1D2635',
-  border: 'rgba(232, 220, 193, 0.14)',
-  borderStrong: 'rgba(232, 220, 193, 0.26)',
-  overlay: 'rgba(7, 10, 16, 0.78)',
+  void: "#F6F7F2",
+  ink: "#20392F",
+  navy: "#EDF1E9",
+  navyBright: "#E6EDE3",
+  cobaltDark: "#345E75",
+  cobalt: "#426B83",
+  emerald: "#287650",
+  amber: "#956025",
+  gold: "#D8B477",
+  goldSoft: "#76531D",
+  red: "#B83E4B",
+  white: "#FFFFFF",
+  text: "#20392F",
+  textMuted: "#5F6F65",
+  textDim: "#6C786E",
+  road: "#A3B1A3",
+  surface: "#FFFFFF",
+  surfaceRaised: "#F0F3EC",
+  surfaceSoft: "#E6EDE3",
+  border: "#DFE5DC",
+  borderStrong: "#BDC9BB",
+  overlay: "rgba(26,45,35,0.45)",
 } as const;
 
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
@@ -53,25 +54,25 @@ export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
 export const Fonts = Platform.select({
   ios: {
     /** iOS `UIFontDescriptorSystemDesignDefault` */
-    sans: 'system-ui',
+    sans: "system-ui",
     /** iOS `UIFontDescriptorSystemDesignSerif` */
-    serif: 'ui-serif',
+    serif: "ui-serif",
     /** iOS `UIFontDescriptorSystemDesignRounded` */
-    rounded: 'ui-rounded',
+    rounded: "ui-rounded",
     /** iOS `UIFontDescriptorSystemDesignMonospaced` */
-    mono: 'ui-monospace',
+    mono: "ui-monospace",
   },
   default: {
-    sans: 'normal',
-    serif: 'serif',
-    rounded: 'normal',
-    mono: 'monospace',
+    sans: "normal",
+    serif: "serif",
+    rounded: "normal",
+    mono: "monospace",
   },
   web: {
-    sans: 'var(--font-display)',
-    serif: 'var(--font-serif)',
-    rounded: 'var(--font-rounded)',
-    mono: 'var(--font-mono)',
+    sans: "var(--font-display)",
+    serif: "var(--font-serif)",
+    rounded: "var(--font-rounded)",
+    mono: "var(--font-mono)",
   },
 });
 

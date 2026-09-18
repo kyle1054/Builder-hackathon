@@ -1,0 +1,65 @@
+.rdp-root {
+  --rdp-accent-color: #76531d;
+  --rdp-accent-background-color: #e6ede3;
+  --rdp-today-color: #287650;
+  --rdp-day-width: 44px;
+  --rdp-day-height: 44px;
+  color: #20392f;
+  font-family: inherit;
+  margin: auto;
+}
+.rdp-selected .rdp-day_button {
+  background: #d8b477;
+  color: #20392f;
+  border-color: #76531d;
+  border-radius: 50%;
+}
+.rdp-day_button:hover {
+  background: #e6ede3;
+}
+.rdp-button_previous,
+.rdp-button_next {
+  border-radius: 50%;
+  background: #edf1e9;
+}
+.rdp-day_button:focus-visible {
+  outline: 2px solid #76531d;
+  outline-offset: 2px;
+}
+@media (max-width: 370px) {
+  .rdp-root {
+    --rdp-day-width: 38px;
+    --rdp-day_button-width: 38px;
+  }
+}
+.rdp-root {
+  font-family:
+    system-ui,
+    -apple-system,
+    sans-serif;
+}
+.rdp-month_grid {
+  table-layout: fixed;
+  width: 308px;
+  border-collapse: collapse;
+}
+.rdp-day,
+.rdp-weekday {
+  width: 44px;
+  min-width: 44px;
+  text-align: center;
+}
+.rdp-day_button {
+  margin: auto;
+  font-family: inherit;
+}
+@media (max-width: 370px) {
+  .rdp-month_grid {
+    width: 266px;
+  }
+  .rdp-day,
+  .rdp-weekday {
+    width: 38px;
+    min-width: 38px;
+  }
+}

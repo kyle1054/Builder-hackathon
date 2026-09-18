@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="600" viewBox="0 0 1000 600">
+<defs><linearGradient id="sky" x2="0" y2="1"><stop stop-color="#20364b"/><stop offset="1" stop-color="#82938b"/></linearGradient><linearGradient id="land" x2="0" y2="1"><stop stop-color="#294e4c"/><stop offset="1" stop-color="#132b33"/></linearGradient></defs>
+<path fill="url(#sky)" d="M0 0h1000v600H0z"/><circle cx="740" cy="162" r="102" fill="#d8b477" opacity=".08"/><circle cx="740" cy="162" r="73" fill="#d8b477" opacity=".12"/><circle cx="740" cy="162" r="49" fill="#efd3a0"/>
+<g fill="#f0d7aa" opacity=".6"><circle cx="110" cy="75" r="2"/><circle cx="395" cy="42" r="2"/><circle cx="580" cy="93" r="2"/><circle cx="909" cy="70" r="2"/></g>
+<g fill="none" stroke="#b3c0b4" stroke-linecap="round" opacity=".18"><path d="M40 160h210m-120 19h200M798 265h150" stroke-width="9"/><path d="M500 123h92" stroke-width="6"/></g>
+<path d="M0 344 140 200 259 288 424 141 605 327 750 272 875 326 1000 231V600H0Z" fill="#567371"/><path d="m320 246 104-105 103 107-103-53z" fill="#a3b1a0" opacity=".3"/>
+<path d="M0 342Q170 243 335 373T650 350T1000 353V600H0Z" fill="#3c6260"/>
+<path d="M0 448Q240 330 470 429T1000 374V600H0Z" fill="url(#land)"/>
+<path d="M564 355C431 411 756 431 624 483S439 540 398 620" fill="none" stroke="#758885" stroke-width="42"/>
+<path d="M564 355C431 411 756 431 624 483S439 540 398 620" fill="none" stroke="#243940" stroke-width="32"/>
+<path d="M564 355C431 411 756 431 624 483S439 540 398 620" fill="none" stroke="#ddbd86" stroke-width="2" stroke-dasharray="11 16"/>
+<g fill="#182f35"><path d="m125 383-25 54h17l-24 40h63l-24-40h17zM863 355l-29 64h19l-28 46h76l-28-46h19zM910 388l-22 48h14l-22 37h61l-23-37h15z"/><path d="M0 550q125-80 245 0l-30 50H0Z"/></g>
+<g transform="translate(624 453) rotate(-20)"><rect x="-15" y="-23" width="30" height="47" rx="9" fill="#d8b477"/><rect x="-11" y="-12" width="22" height="13" rx="3" fill="#243940"/><rect x="-10" y="10" width="20" height="7" rx="2" fill="#576963"/><path d="M-11-20h6m10 0h6" stroke="#fff0c9" stroke-width="4"/></g>
+</svg>

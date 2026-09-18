@@ -129,8 +129,8 @@ if (existingParties.length === 1) {
 
 const { data: trip, error: createError } = await pilot.rpc('create_trip', {
   p_party_name: `SideQuest Demo ${new Date().toISOString().slice(0, 16)}`,
-  p_origin_name: 'Cape Town',
-  p_destination_name: 'Greyton',
+  p_origin_name: 'Stellenbosch',
+  p_destination_name: 'Tierfontein Farm',
   p_target_quest_count: 3,
   p_detour_budget_mins: 30,
   p_vibe_preferences: ['scenic', 'food', 'lore', 'curiosity'],

@@ -18,6 +18,7 @@ if (!supabaseUrl || !supabasePublishableKey) {
 export const supabase = createClient<Database>(supabaseUrl, supabasePublishableKey, {
   auth: {
     ...(Platform.OS === 'web' ? {} : { storage: AsyncStorage }),
+    flowType: 'pkce',
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: false,

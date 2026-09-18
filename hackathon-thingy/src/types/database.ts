@@ -599,6 +599,7 @@ export type Database = {
       }
     }
     Functions: {
+      trip_planner: { Args: { p_action: string; p_data?: Json }; Returns: Json }
       create_photo_upload: {
         Args: {
           p_captured_at?: string
