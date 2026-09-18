@@ -4,6 +4,7 @@ import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-c
 
 import AppTabs from '@/components/app-tabs';
 import { SideQuestColors } from '@/constants/theme';
+import { AuthProvider } from '@/context/auth';
 import { DemoJourneyProvider } from '@/context/demo-journey';
 
 const sideQuestTheme = {
@@ -23,10 +24,12 @@ export default function RootLayout() {
   return (
     <SafeAreaProvider initialMetrics={initialWindowMetrics}>
       <ThemeProvider value={sideQuestTheme}>
-        <DemoJourneyProvider>
-          <StatusBar style="light" />
-          <AppTabs />
-        </DemoJourneyProvider>
+        <AuthProvider>
+          <DemoJourneyProvider>
+            <StatusBar style="light" />
+            <AppTabs />
+          </DemoJourneyProvider>
+        </AuthProvider>
       </ThemeProvider>
     </SafeAreaProvider>
   );

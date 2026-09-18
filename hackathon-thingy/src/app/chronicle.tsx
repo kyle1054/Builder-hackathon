@@ -1,175 +1,63 @@
-import { StyleSheet, Text, View } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
+import { SymbolView } from 'expo-symbols';
+import { Pressable, StyleSheet, Text, View } from 'react-native';
 
-import {
-  BodyText,
-  Eyebrow,
-  PixelButton,
-  PixelPanel,
-  QuestScreen,
-  SectionHeading,
-  Title,
-} from '@/components/sidequest-ui';
+import { AuthGate } from '@/components/auth-gate';
+import { BodyText, Eyebrow, PixelButton, QuestScreen, SectionHeading, Surface, Title } from '@/components/sidequest-ui';
 import { SideQuestColors } from '@/constants/theme';
 import { DemoMemory, useDemoJourney } from '@/context/demo-journey';
 
-const toneColors = {
-  amber: { sky: '#6A3F28', ground: '#E18E3A' },
-  blue: { sky: '#164B72', ground: '#49A4BA' },
-  green: { sky: '#1E5546', ground: '#62A65E' },
-};
+const tones = { amber: ['#906142', '#34261E'], blue: ['#487A96', '#172B38'], green: ['#4D7D67', '#172A24'] } as const;
 
-function MemoryCard({ memory }: { memory: DemoMemory }) {
-  const tone = toneColors[memory.tone];
+function MemoryCard({ memory, featured }: { memory: DemoMemory; featured?: boolean }) {
   return (
-    <View style={styles.memoryCard} accessibilityLabel={`${memory.title}, captured by ${memory.owner}, ${memory.votes} votes`}>
-      <View style={[styles.memoryImage, { backgroundColor: tone.sky }]}>
-        <View style={[styles.memorySun, { backgroundColor: SideQuestColors.gold }]} />
-        <View style={[styles.memoryHillBack, { backgroundColor: tone.ground }]} />
-        <View style={styles.memoryHillFront} />
-        <View style={styles.memoryStamp}>
-          <Text style={styles.memoryStampText}>{memory.votes} vote{memory.votes === 1 ? '' : 's'}</Text>
-        </View>
-      </View>
-      <View style={styles.memoryCaption}>
-        <Text style={styles.memoryTitle}>{memory.title}</Text>
-        <Text style={styles.memoryMeta}>{memory.place} · {memory.time}</Text>
-        <Text style={styles.memoryOwner}>By {memory.owner}</Text>
-      </View>
+    <View style={[styles.memoryCard, featured && styles.featuredCard]} accessibilityLabel={`${memory.title}, by ${memory.owner}, ${memory.votes} votes`}>
+      <LinearGradient colors={tones[memory.tone]} style={styles.memoryImage}>
+        <View style={styles.memorySun} /><View style={styles.memoryHill} /><View style={styles.memoryHillFront} />
+        <View style={styles.voteChip}><SymbolView name={{ ios: 'heart.fill', android: 'favorite', web: 'favorite' }} tintColor={SideQuestColors.goldSoft} size={12} /><Text style={styles.voteText}>{memory.votes}</Text></View>
+      </LinearGradient>
+      <View style={styles.memoryCopy}><Text style={styles.memoryTitle}>{memory.title}</Text><Text style={styles.memoryMeta}>{memory.place} · {memory.time}</Text><Text style={styles.memoryOwner}>{memory.owner}</Text></View>
     </View>
   );
 }
 
-export default function ChronicleScreen() {
+function ChronicleContent() {
   const { checkpoint, checkpointIndex, checkpoints, memories, addMemory } = useDemoJourney();
   const complete = checkpointIndex === checkpoints.length - 1;
   const partyComplete = memories.some((memory) => memory.owner === 'Demo Pilot') && memories.some((memory) => memory.owner === 'Demo Navigator');
-
   return (
     <QuestScreen>
-      <View style={styles.header}>
-        <Eyebrow>The Traveler’s Chronicle</Eyebrow>
-        <Title>Small moments, kept.</Title>
-        <BodyText muted>Private to The Roadbound · No public share link</BodyText>
-      </View>
+      <View style={styles.header}><View style={styles.headerCopy}><Eyebrow>Traveler’s Chronicle</Eyebrow><Title>Small moments, kept.</Title><BodyText muted>Private to The Roadbound. Nothing is shared publicly.</BodyText></View><View style={styles.lock}><SymbolView name={{ ios: 'lock.fill', android: 'lock', web: 'lock' }} tintColor={SideQuestColors.emerald} size={15} /></View></View>
 
-      <PixelPanel style={styles.summaryPanel}>
-        <View style={styles.summaryTop}>
-          <View>
-            <Text style={styles.summaryRoute}>Cape Town → Greyton</Text>
-            <Text style={styles.summaryMeta}>Act I · {checkpoint.progress}% complete</Text>
-          </View>
-          <View style={styles.memoryCount}>
-            <Text style={styles.memoryCountValue}>{memories.length}</Text>
-            <Text style={styles.memoryCountLabel}>Memories</Text>
-          </View>
-        </View>
-        <View style={styles.summaryStats}>
-          <View style={styles.summaryStat}>
-            <Text style={styles.summaryStatValue}>285</Text>
-            <Text style={styles.summaryStatLabel}>Trip XP</Text>
-          </View>
-          <View style={styles.summaryStat}>
-            <Text style={styles.summaryStatValue}>48 G</Text>
-            <Text style={styles.summaryStatLabel}>Gold</Text>
-          </View>
-          <View style={styles.summaryStat}>
-            <Text style={styles.summaryStatValue}>2 / 2</Text>
-            <Text style={styles.summaryStatLabel}>Contributors</Text>
-          </View>
-        </View>
-      </PixelPanel>
+      <Surface style={styles.summary}>
+        <View style={styles.summaryTop}><View><Text style={styles.route}>Cape Town → Greyton</Text><Text style={styles.act}>ACT I · {checkpoint.progress}% COMPLETE</Text></View><View style={styles.count}><Text style={styles.countValue}>{memories.length}</Text><Text style={styles.countLabel}>Memories</Text></View></View>
+        <View style={styles.stats}>{[['285', 'Trip XP'], ['48', 'Gold'], ['2 / 2', 'Contributors']].map(([value, label]) => <View key={label} style={styles.stat}><Text style={styles.statValue}>{value}</Text><Text style={styles.statLabel}>{label}</Text></View>)}</View>
+      </Surface>
 
-      {partyComplete && (
-        <View style={styles.multiplayerBanner}>
-          <View style={styles.multiplayerMark}><Text style={styles.multiplayerMarkText}>M</Text></View>
-          <View style={styles.multiplayerCopy}>
-            <Text style={styles.multiplayerTitle}>Multiplayer memory bonus</Text>
-            <Text style={styles.multiplayerText}>Every human traveler contributed. +50 XP each at arrival.</Text>
-          </View>
-        </View>
-      )}
+      {partyComplete && <View style={styles.bonus}><View style={styles.bonusIcon}><Text style={styles.bonusRune}>✦</Text></View><View style={styles.bonusCopy}><Text style={styles.bonusTitle}>Party memory bonus</Text><Text style={styles.bonusText}>Every traveler contributed. +50 XP each at arrival.</Text></View></View>}
 
-      <View style={styles.sectionBlock}>
-        <SectionHeading
-          title="Roadside memories"
-          action={<Text style={styles.privateLabel}>Party only</Text>}
-        />
-        <View style={styles.memoryGrid}>
-          {memories.map((memory) => <MemoryCard key={memory.id} memory={memory} />)}
-        </View>
-      </View>
+      <View style={styles.section}><SectionHeading title="Roadside memories" action={<Text style={styles.partyOnly}>Party only</Text>} /><View style={styles.memoryGrid}>{memories.map((memory, index) => <MemoryCard key={memory.id} memory={memory} featured={index === 0} />)}</View></View>
 
-      <PixelPanel>
-        <Eyebrow color={SideQuestColors.cobalt}>Memory rules</Eyebrow>
-        <BodyText>
-          Each traveler earns 25 XP for their first photo. Votes stay hidden until arrival, and you
-          cannot vote for your own memory.
-        </BodyText>
-        <View style={styles.ruleRow}>
-          <Text style={styles.ruleKey}>After arrival</Text>
-          <Text style={styles.ruleValue}>24 hours to add extras</Text>
-        </View>
-        <View style={styles.ruleRow}>
-          <Text style={styles.ruleKey}>Deletion</Text>
-          <Text style={styles.ruleValue}>Poster always controls their photo</Text>
-        </View>
-      </PixelPanel>
+      <Surface>
+        <Eyebrow color={SideQuestColors.cobalt}>A gentler camera roll</Eyebrow>
+        <BodyText muted>One small memento per traveler unlocks the group reward. Votes remain hidden until arrival, and your own photo is never votable by you.</BodyText>
+        <View style={styles.rule}><Text style={styles.ruleLabel}>After arrival</Text><Text style={styles.ruleValue}>24 hours to add extras</Text></View>
+        <View style={styles.rule}><Text style={styles.ruleLabel}>Ownership</Text><Text style={styles.ruleValue}>Only the poster can delete</Text></View>
+      </Surface>
 
-      <View style={styles.addBlock}>
-        <PixelButton label="Add a demo memory" onPress={addMemory} variant="gold" />
-        <BodyText muted style={styles.addHint}>
-          Camera access comes next. This button adds a styled placeholder at {checkpoint.place}.
-        </BodyText>
-      </View>
-
-      <View style={[styles.favoriteReveal, complete && styles.favoriteRevealReady]}>
-        <Text style={styles.favoriteEyebrow}>{complete ? 'Votes revealed' : 'Locked until arrival'}</Text>
-        <Text style={styles.favoriteTitle}>{complete ? 'Dunes at dawn leads the party vote.' : 'Favorite memory award'}</Text>
-      </View>
+      <View style={styles.add}><PixelButton label="Add a demo memory" onPress={addMemory} /><Text style={styles.addHint}>Adds a private placeholder at {checkpoint.place}.</Text></View>
+      <Pressable accessibilityRole="button" style={[styles.reveal, complete && styles.revealReady]}><Text style={styles.revealEyebrow}>{complete ? 'Votes revealed' : 'Sealed until arrival'}</Text><Text style={styles.revealTitle}>{complete ? 'Dunes at dawn leads the party vote.' : 'Favorite memory award'}</Text></Pressable>
     </QuestScreen>
   );
 }
 
+export default function ChronicleScreen() { return <AuthGate><ChronicleContent /></AuthGate>; }
+
 const styles = StyleSheet.create({
-  header: { gap: 6 },
-  summaryPanel: { borderColor: SideQuestColors.gold },
-  summaryTop: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 },
-  summaryRoute: { color: SideQuestColors.white, fontFamily: 'monospace', fontWeight: '900', fontSize: 15 },
-  summaryMeta: { color: SideQuestColors.textMuted, fontFamily: 'monospace', fontSize: 10, marginTop: 4 },
-  memoryCount: { borderWidth: 2, borderColor: SideQuestColors.gold, backgroundColor: '#292000', minWidth: 74, padding: 8, alignItems: 'center' },
-  memoryCountValue: { color: SideQuestColors.gold, fontFamily: 'monospace', fontSize: 20, fontWeight: '900' },
-  memoryCountLabel: { color: SideQuestColors.textMuted, fontFamily: 'monospace', fontSize: 8, textTransform: 'uppercase' },
-  summaryStats: { flexDirection: 'row', borderTopWidth: 1, borderTopColor: '#363C78', paddingTop: 12 },
-  summaryStat: { flex: 1, alignItems: 'center', borderRightWidth: 1, borderRightColor: '#363C78' },
-  summaryStatValue: { color: SideQuestColors.white, fontFamily: 'monospace', fontWeight: '900', fontSize: 14 },
-  summaryStatLabel: { color: SideQuestColors.textDim, fontFamily: 'monospace', fontSize: 8, textTransform: 'uppercase', marginTop: 3 },
-  multiplayerBanner: { backgroundColor: '#002D1A', borderWidth: 2, borderColor: SideQuestColors.emerald, padding: 12, flexDirection: 'row', gap: 10, alignItems: 'center' },
-  multiplayerMark: { width: 36, height: 36, backgroundColor: SideQuestColors.emerald, alignItems: 'center', justifyContent: 'center' },
-  multiplayerMarkText: { color: SideQuestColors.ink, fontFamily: 'monospace', fontWeight: '900' },
-  multiplayerCopy: { flex: 1 },
-  multiplayerTitle: { color: SideQuestColors.emerald, fontFamily: 'monospace', fontWeight: '900', fontSize: 11, textTransform: 'uppercase' },
-  multiplayerText: { color: SideQuestColors.white, fontFamily: 'monospace', fontSize: 10, lineHeight: 15, marginTop: 3 },
-  sectionBlock: { gap: 10 },
-  privateLabel: { color: SideQuestColors.emerald, fontFamily: 'monospace', fontWeight: '900', fontSize: 9, textTransform: 'uppercase' },
-  memoryGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 },
-  memoryCard: { flexGrow: 1, flexBasis: 154, maxWidth: 356, borderWidth: 3, borderColor: SideQuestColors.white, backgroundColor: SideQuestColors.ink, padding: 3 },
-  memoryImage: { height: 132, overflow: 'hidden' },
-  memorySun: { position: 'absolute', width: 34, height: 34, top: 17, right: 20 },
-  memoryHillBack: { position: 'absolute', width: 150, height: 90, transform: [{ rotate: '30deg' }], bottom: -45, left: -20 },
-  memoryHillFront: { position: 'absolute', width: 190, height: 90, transform: [{ rotate: '-24deg' }], backgroundColor: '#14263D', bottom: -50, right: -35 },
-  memoryStamp: { position: 'absolute', top: 8, left: 8, backgroundColor: SideQuestColors.ink, borderWidth: 1, borderColor: SideQuestColors.white, paddingHorizontal: 6, paddingVertical: 4 },
-  memoryStampText: { color: SideQuestColors.white, fontFamily: 'monospace', fontSize: 8, fontWeight: '900', textTransform: 'uppercase' },
-  memoryCaption: { padding: 9, gap: 3 },
-  memoryTitle: { color: SideQuestColors.white, fontFamily: 'monospace', fontSize: 12, fontWeight: '900' },
-  memoryMeta: { color: SideQuestColors.textMuted, fontFamily: 'monospace', fontSize: 9 },
-  memoryOwner: { color: SideQuestColors.gold, fontFamily: 'monospace', fontSize: 8, textTransform: 'uppercase', marginTop: 3 },
-  ruleRow: { flexDirection: 'row', justifyContent: 'space-between', gap: 12, borderTopWidth: 1, borderTopColor: '#363C78', paddingTop: 9 },
-  ruleKey: { color: SideQuestColors.textDim, fontFamily: 'monospace', fontSize: 10, textTransform: 'uppercase' },
-  ruleValue: { color: SideQuestColors.white, fontFamily: 'monospace', fontSize: 10, textAlign: 'right', flex: 1 },
-  addBlock: { gap: 8 },
-  addHint: { textAlign: 'center', fontSize: 11, lineHeight: 17 },
-  favoriteReveal: { borderWidth: 2, borderColor: '#363C78', backgroundColor: '#11132F', padding: 14, opacity: 0.62 },
-  favoriteRevealReady: { borderColor: SideQuestColors.gold, backgroundColor: '#292000', opacity: 1 },
-  favoriteEyebrow: { color: SideQuestColors.gold, fontFamily: 'monospace', fontWeight: '900', fontSize: 9, textTransform: 'uppercase' },
-  favoriteTitle: { color: SideQuestColors.white, fontFamily: 'monospace', fontWeight: '900', fontSize: 13, lineHeight: 19, marginTop: 4 },
+  header: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 }, headerCopy: { flex: 1, gap: 5 }, lock: { width: 39, height: 39, borderRadius: 14, backgroundColor: 'rgba(117,198,157,0.1)', alignItems: 'center', justifyContent: 'center' },
+  summary: { borderColor: 'rgba(216,180,119,0.28)' }, summaryTop: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 12 }, route: { color: SideQuestColors.white, fontFamily: 'Georgia', fontSize: 18 }, act: { color: SideQuestColors.textDim, fontSize: 9, fontWeight: '700', letterSpacing: 1.1, marginTop: 5 }, count: { alignItems: 'center', minWidth: 74 }, countValue: { color: SideQuestColors.goldSoft, fontFamily: 'Georgia', fontSize: 25 }, countLabel: { color: SideQuestColors.textDim, fontSize: 9, textTransform: 'uppercase' },
+  stats: { flexDirection: 'row', borderTopWidth: 1, borderTopColor: SideQuestColors.border, paddingTop: 14 }, stat: { flex: 1, alignItems: 'center' }, statValue: { color: SideQuestColors.white, fontSize: 15, fontWeight: '700' }, statLabel: { color: SideQuestColors.textDim, fontSize: 9, textTransform: 'uppercase', marginTop: 3 },
+  bonus: { borderRadius: 18, padding: 14, backgroundColor: 'rgba(117,198,157,0.09)', flexDirection: 'row', gap: 11, alignItems: 'center' }, bonusIcon: { width: 40, height: 40, borderRadius: 14, backgroundColor: 'rgba(117,198,157,0.13)', alignItems: 'center', justifyContent: 'center' }, bonusRune: { color: SideQuestColors.emerald, fontSize: 18 }, bonusCopy: { flex: 1 }, bonusTitle: { color: SideQuestColors.emerald, fontSize: 12, fontWeight: '700' }, bonusText: { color: SideQuestColors.textMuted, fontSize: 11, marginTop: 3 },
+  section: { gap: 10 }, partyOnly: { color: SideQuestColors.emerald, fontSize: 10, fontWeight: '700' }, memoryGrid: { flexDirection: 'row', flexWrap: 'wrap', gap: 12 }, memoryCard: { flexGrow: 1, flexBasis: 155, maxWidth: 356, borderRadius: 18, overflow: 'hidden', backgroundColor: SideQuestColors.surface, borderWidth: 1, borderColor: SideQuestColors.border }, featuredCard: { borderColor: 'rgba(216,180,119,0.34)' }, memoryImage: { height: 140, overflow: 'hidden' }, memorySun: { position: 'absolute', width: 32, height: 32, borderRadius: 16, backgroundColor: SideQuestColors.goldSoft, opacity: 0.7, right: 21, top: 20 }, memoryHill: { position: 'absolute', width: 160, height: 90, backgroundColor: 'rgba(19,39,45,0.75)', transform: [{ rotate: '27deg' }], bottom: -55, left: -32 }, memoryHillFront: { position: 'absolute', width: 200, height: 100, backgroundColor: 'rgba(10,22,29,0.82)', transform: [{ rotate: '-22deg' }], bottom: -65, right: -38 }, voteChip: { position: 'absolute', top: 10, left: 10, flexDirection: 'row', gap: 5, alignItems: 'center', borderRadius: 999, backgroundColor: 'rgba(8,11,18,0.72)', paddingHorizontal: 8, paddingVertical: 5 }, voteText: { color: SideQuestColors.white, fontSize: 10, fontWeight: '700' }, memoryCopy: { padding: 13 }, memoryTitle: { color: SideQuestColors.white, fontFamily: 'Georgia', fontSize: 16 }, memoryMeta: { color: SideQuestColors.textMuted, fontSize: 10, marginTop: 5 }, memoryOwner: { color: SideQuestColors.gold, fontSize: 9, fontWeight: '700', marginTop: 7, textTransform: 'uppercase' },
+  rule: { flexDirection: 'row', justifyContent: 'space-between', gap: 14, borderTopWidth: 1, borderTopColor: SideQuestColors.border, paddingTop: 11 }, ruleLabel: { color: SideQuestColors.textDim, fontSize: 11 }, ruleValue: { color: SideQuestColors.white, fontSize: 11, textAlign: 'right' }, add: { gap: 8 }, addHint: { color: SideQuestColors.textDim, fontSize: 11, textAlign: 'center' }, reveal: { borderRadius: 18, borderWidth: 1, borderColor: SideQuestColors.border, backgroundColor: SideQuestColors.surface, padding: 16, opacity: 0.62 }, revealReady: { borderColor: 'rgba(216,180,119,0.35)', opacity: 1 }, revealEyebrow: { color: SideQuestColors.gold, fontSize: 9, fontWeight: '700', textTransform: 'uppercase', letterSpacing: 1.1 }, revealTitle: { color: SideQuestColors.white, fontFamily: 'Georgia', fontSize: 17, marginTop: 5 },
 });

@@ -1,3 +1,4 @@
+import { LinearGradient } from 'expo-linear-gradient';
 import { PropsWithChildren, ReactNode } from 'react';
 import {
   ActivityIndicator,
@@ -16,29 +17,39 @@ import { SideQuestColors } from '@/constants/theme';
 
 export function QuestScreen({ children }: PropsWithChildren) {
   return (
-    <SafeAreaView style={styles.screen} edges={['top', 'left', 'right']}>
-      <View style={styles.skyGlow} />
-      <ScrollView
-        contentContainerStyle={styles.screenContent}
-        showsVerticalScrollIndicator={false}
-        keyboardShouldPersistTaps="handled">
-        {children}
-      </ScrollView>
-    </SafeAreaView>
+    <View style={styles.screen}>
+      <LinearGradient
+        colors={['#101827', '#080B12', '#07090E']}
+        locations={[0, 0.5, 1]}
+        style={StyleSheet.absoluteFill}
+      />
+      <View style={styles.ambientGold} />
+      <View style={styles.ambientBlue} />
+      <SafeAreaView style={styles.safeArea} edges={['top', 'left', 'right']}>
+        <ScrollView
+          contentContainerStyle={styles.screenContent}
+          showsVerticalScrollIndicator={false}
+          keyboardShouldPersistTaps="handled">
+          {children}
+        </ScrollView>
+      </SafeAreaView>
+    </View>
   );
 }
 
-export function PixelPanel({
+export function Surface({
   children,
   style,
   accessibilityLabel,
 }: PropsWithChildren<{ style?: StyleProp<ViewStyle>; accessibilityLabel?: string }>) {
   return (
-    <View style={[styles.panelOuter, style]} accessibilityLabel={accessibilityLabel}>
-      <View style={styles.panelInner}>{children}</View>
+    <View style={[styles.surface, style]} accessibilityLabel={accessibilityLabel}>
+      {children}
     </View>
   );
 }
+
+export const PixelPanel = Surface;
 
 export function Eyebrow({ children, color = SideQuestColors.gold }: PropsWithChildren<{ color?: string }>) {
   return <Text style={[styles.eyebrow, { color }]}>{children}</Text>;
@@ -71,6 +82,12 @@ export function PixelButton({
   loading?: boolean;
   accessibilityHint?: string;
 }) {
+  const content = loading ? (
+    <ActivityIndicator color={variant === 'ghost' ? SideQuestColors.white : SideQuestColors.ink} />
+  ) : (
+    <Text style={[styles.buttonLabel, variant === 'ghost' && styles.buttonLabelGhost]}>{label}</Text>
+  );
+
   return (
     <Pressable
       accessibilityRole="button"
@@ -85,11 +102,11 @@ export function PixelButton({
         pressed && styles.buttonPressed,
         (disabled || loading) && styles.buttonDisabled,
       ]}>
-      {loading ? (
-        <ActivityIndicator color={variant === 'ghost' ? SideQuestColors.white : SideQuestColors.ink} />
-      ) : (
-        <Text style={[styles.buttonLabel, variant === 'ghost' && styles.buttonLabelGhost]}>{label}</Text>
-      )}
+      {variant === 'gold' ? (
+        <LinearGradient colors={['#E6C58D', '#C99C5E']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.buttonGradient}>
+          {content}
+        </LinearGradient>
+      ) : content}
     </Pressable>
   );
 }
@@ -127,150 +144,116 @@ export function SectionHeading({ title, action }: { title: string; action?: Reac
   );
 }
 
+export function Ornament() {
+  return (
+    <View style={styles.ornament} accessibilityElementsHidden>
+      <View style={styles.ornamentLine} />
+      <View style={styles.ornamentDiamond} />
+      <View style={styles.ornamentLine} />
+    </View>
+  );
+}
+
 const styles = StyleSheet.create({
-  screen: {
-    flex: 1,
-    backgroundColor: SideQuestColors.void,
-  },
-  skyGlow: {
+  screen: { flex: 1, backgroundColor: SideQuestColors.void, overflow: 'hidden' },
+  safeArea: { flex: 1 },
+  ambientGold: {
     position: 'absolute',
-    width: 280,
-    height: 280,
-    borderRadius: 140,
-    backgroundColor: SideQuestColors.cobaltDark,
-    opacity: 0.28,
-    top: -140,
-    right: -100,
+    width: 360,
+    height: 360,
+    borderRadius: 180,
+    backgroundColor: '#6A4E28',
+    opacity: 0.12,
+    top: -220,
+    right: -120,
+  },
+  ambientBlue: {
+    position: 'absolute',
+    width: 300,
+    height: 300,
+    borderRadius: 150,
+    backgroundColor: '#294B67',
+    opacity: 0.1,
+    bottom: 40,
+    left: -200,
   },
   screenContent: {
     width: '100%',
     maxWidth: 760,
     alignSelf: 'center',
-    paddingHorizontal: 16,
-    paddingTop: 16,
-    paddingBottom: 120,
-    gap: 20,
+    paddingHorizontal: 20,
+    paddingTop: 20,
+    paddingBottom: 124,
+    gap: 24,
   },
-  panelOuter: {
-    borderWidth: 4,
-    borderColor: SideQuestColors.white,
-    backgroundColor: SideQuestColors.ink,
-    padding: 2,
+  surface: {
+    backgroundColor: 'rgba(20, 27, 39, 0.94)',
+    borderWidth: 1,
+    borderColor: SideQuestColors.border,
+    borderRadius: 20,
+    padding: 18,
+    gap: 14,
     shadowColor: '#000000',
-    shadowOpacity: 0.38,
-    shadowOffset: { width: 6, height: 7 },
-    shadowRadius: 0,
-    elevation: 8,
-  },
-  panelInner: {
-    backgroundColor: SideQuestColors.navy,
-    borderWidth: 2,
-    borderColor: SideQuestColors.ink,
-    padding: 16,
-    gap: 12,
+    shadowOpacity: 0.2,
+    shadowOffset: { width: 0, height: 10 },
+    shadowRadius: 24,
+    elevation: 5,
   },
   eyebrow: {
-    fontFamily: 'monospace',
-    fontWeight: '800',
+    fontFamily: 'system-ui',
+    fontWeight: '700',
     fontSize: 11,
     lineHeight: 16,
-    letterSpacing: 1.5,
+    letterSpacing: 1.6,
     textTransform: 'uppercase',
   },
   title: {
     color: SideQuestColors.white,
-    fontFamily: 'monospace',
-    fontWeight: '900',
-    fontSize: 25,
-    lineHeight: 33,
+    fontFamily: 'Georgia',
+    fontWeight: '600',
+    fontSize: 32,
+    lineHeight: 39,
     letterSpacing: -0.6,
   },
   body: {
     color: SideQuestColors.white,
-    fontFamily: 'monospace',
+    fontFamily: 'system-ui',
     fontSize: 16,
     lineHeight: 24,
   },
-  bodyMuted: {
-    color: SideQuestColors.textMuted,
-  },
+  bodyMuted: { color: SideQuestColors.textMuted },
   button: {
     minHeight: 52,
-    paddingHorizontal: 18,
-    paddingVertical: 13,
-    borderWidth: 3,
-    borderColor: SideQuestColors.ink,
+    borderRadius: 14,
+    overflow: 'hidden',
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  buttonGradient: {
+    width: '100%',
+    minHeight: 52,
+    paddingHorizontal: 20,
+    paddingVertical: 14,
     alignItems: 'center',
     justifyContent: 'center',
   },
   button_gold: { backgroundColor: SideQuestColors.gold },
-  button_blue: { backgroundColor: SideQuestColors.cobalt },
-  button_danger: { backgroundColor: SideQuestColors.red },
-  button_ghost: {
-    backgroundColor: 'transparent',
-    borderColor: SideQuestColors.white,
-  },
-  buttonPressed: {
-    opacity: 0.72,
-  },
-  buttonDisabled: {
-    opacity: 0.42,
-  },
-  buttonLabel: {
-    color: SideQuestColors.ink,
-    fontFamily: 'monospace',
-    fontWeight: '900',
-    fontSize: 13,
-    letterSpacing: 0.6,
-    textTransform: 'uppercase',
-    textAlign: 'center',
-  },
-  buttonLabelGhost: {
-    color: SideQuestColors.white,
-  },
-  statBlock: { gap: 6 },
-  statHeader: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'baseline',
-    gap: 8,
-  },
-  statLabel: {
-    color: SideQuestColors.textMuted,
-    fontFamily: 'monospace',
-    fontWeight: '800',
-    fontSize: 11,
-    letterSpacing: 1,
-    textTransform: 'uppercase',
-  },
-  statValue: {
-    color: SideQuestColors.white,
-    fontFamily: 'monospace',
-    fontWeight: '800',
-    fontSize: 12,
-  },
-  statTrack: {
-    height: 12,
-    padding: 2,
-    backgroundColor: SideQuestColors.ink,
-    borderWidth: 1,
-    borderColor: SideQuestColors.white,
-  },
-  statFill: { height: '100%' },
-  sectionHeading: {
-    minHeight: 28,
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    gap: 12,
-  },
-  sectionTitle: {
-    color: SideQuestColors.white,
-    fontFamily: 'monospace',
-    fontSize: 13,
-    lineHeight: 20,
-    fontWeight: '900',
-    letterSpacing: 1.3,
-    textTransform: 'uppercase',
-  },
+  button_blue: { backgroundColor: '#29465F', borderWidth: 1, borderColor: '#547A96' },
+  button_danger: { backgroundColor: '#65313A', borderWidth: 1, borderColor: SideQuestColors.red },
+  button_ghost: { backgroundColor: 'rgba(255,255,255,0.035)', borderWidth: 1, borderColor: SideQuestColors.borderStrong },
+  buttonPressed: { opacity: 0.72 },
+  buttonDisabled: { opacity: 0.4 },
+  buttonLabel: { color: SideQuestColors.ink, fontFamily: 'system-ui', fontWeight: '700', fontSize: 14, letterSpacing: 0.2, textAlign: 'center' },
+  buttonLabelGhost: { color: SideQuestColors.white },
+  statBlock: { gap: 8 },
+  statHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'baseline', gap: 8 },
+  statLabel: { color: SideQuestColors.textMuted, fontFamily: 'system-ui', fontWeight: '600', fontSize: 12 },
+  statValue: { color: SideQuestColors.white, fontFamily: 'system-ui', fontWeight: '700', fontSize: 12, fontVariant: ['tabular-nums'] },
+  statTrack: { height: 6, overflow: 'hidden', backgroundColor: '#2A3240', borderRadius: 3 },
+  statFill: { height: '100%', borderRadius: 3 },
+  sectionHeading: { minHeight: 30, flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', gap: 12 },
+  sectionTitle: { color: SideQuestColors.white, fontFamily: 'system-ui', fontSize: 16, lineHeight: 22, fontWeight: '700', letterSpacing: -0.1 },
+  ornament: { flexDirection: 'row', alignItems: 'center', gap: 8, width: 88 },
+  ornamentLine: { flex: 1, height: 1, backgroundColor: SideQuestColors.gold, opacity: 0.55 },
+  ornamentDiamond: { width: 6, height: 6, transform: [{ rotate: '45deg' }], borderWidth: 1, borderColor: SideQuestColors.gold },
 });

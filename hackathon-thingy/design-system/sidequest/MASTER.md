@@ -3,86 +3,129 @@
 > **LOGIC:** When building a specific page, first check `design-system/pages/[page-name].md`.
 > If that file exists, its rules **override** this Master file.
 > If not, strictly follow the rules below.
+>
+> **IDENTITY:** `docs/identity.md` defines what SideQuest is, who it's for, how it sounds
+> and how it should feel. That file **overrides this one** on any conflict. Read it first.
 
 ---
 
 **Project:** SideQuest
-**Generated:** 2026-09-18 13:56:31
-**Category:** Arcade & Retro Game
+**Generated:** 2026-09-18 14:08:15
+**Revised:** 2026-09-18 — globals realigned to the real product identity
+**Category:** Travel / Co-op road trip companion (React Native + Expo, mobile-first)
 
 ---
 
 ## Global Rules
 
+### Platform note
+
+This is an **Expo / React Native** app, not a website. CSS below is specification,
+not shippable code — translate to `StyleSheet` / RN props. There is no hover state on
+touch; use pressed states. There is no `cursor: pointer`.
+
+**Dark mode is the only mode.** The app ships `userInterfaceStyle: "dark"`. Do not
+build a light theme.
+
 ### Color Palette
+
+Authoritative source in code: `src/constants/theme.ts` → `SideQuestColors`.
 
 | Role | Hex | CSS Variable |
 |------|-----|--------------|
-| Primary | `#EA580C` | `--color-primary` |
-| On Primary | `#FFFFFF` | `--color-on-primary` |
-| Secondary | `#0891B2` | `--color-secondary` |
-| Accent/CTA | `#D97706` | `--color-accent` |
-| Background | `#FFF7ED` | `--color-background` |
-| Foreground | `#0F172A` | `--color-foreground` |
-| Muted | `#FDF4F0` | `--color-muted` |
-| Border | `#FCEAE1` | `--color-border` |
-| Destructive | `#DC2626` | `--color-destructive` |
-| Ring | `#EA580C` | `--color-ring` |
+| Primary / Accent (CTA) | `#D8B477` | `--color-primary` |
+| On Primary | `#080B12` | `--color-on-primary` |
+| Primary Soft (active nav, highlight) | `#F0D7AA` | `--color-primary-soft` |
+| Background (void) | `#080B12` | `--color-background` |
+| Surface Sunken (ink) | `#0C1018` | `--color-surface-sunken` |
+| Surface (navy) | `#111827` | `--color-surface` |
+| Surface Raised (navy bright) | `#182234` | `--color-surface-raised` |
+| Foreground (parchment) | `#F5F1E8` | `--color-foreground` |
+| Muted Foreground | `#A9B0BE` | `--color-muted-foreground` |
+| Border | `#27405A` | `--color-border` |
+| Secondary / Info (cobalt) | `#7FA8C9` | `--color-secondary` |
+| Success (emerald) | `#75C69D` | `--color-success` |
+| Warning / Warmth (amber) | `#DFA45B` | `--color-warning` |
+| Destructive | `#D86E78` | `--color-destructive` |
+| Ring (focus) | `#D8B477` | `--color-ring` |
 
-**Color Notes:** Adventure orange + map teal
+**Color Notes:** Night drive, warm dashboard light. Deep navy void with gold and
+parchment. Foreground white is **parchment `#F5F1E8`, never `#FFFFFF`** — that warmth
+is deliberate, do not "correct" it.
 
 ### Typography
 
-- **Heading Font:** Press Start 2P
-- **Body Font:** VT323
-- **Mood:** pixel, retro, gaming, 8-bit, nostalgic, arcade
-- **Google Fonts:** [Press Start 2P + VT323](https://fonts.google.com/share?selection.family=Press+Start+2P|VT323)
+- **Heading Font:** system sans (SF Pro on iOS, Roboto on Android) — weight 650–700
+- **Body Font:** system sans — weight 400–500
+- **Mood:** warm, cinematic, unhurried, nostalgic, legible-in-a-car, quietly playful
+- **Accent:** a pixel/bitmap face is permitted **for numerals, badges and short labels
+  only** (see the 20% rule). Never for body copy.
 
-**CSS Import:**
-```css
-@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323&display=swap');
-```
+System fonts are intentional: they render instantly, respect the user's accessibility
+text size, and keep the pixel accents feeling like a deliberate contrast rather than
+one more novelty typeface.
 
 ### Spacing Variables
 
 | Token | Value | Usage |
 |-------|-------|-------|
-| `--space-xs` | `4px` / `0.25rem` | Tight gaps |
-| `--space-sm` | `8px` / `0.5rem` | Icon gaps, inline spacing |
-| `--space-md` | `16px` / `1rem` | Standard padding |
-| `--space-lg` | `24px` / `1.5rem` | Section padding |
-| `--space-xl` | `32px` / `2rem` | Large gaps |
-| `--space-2xl` | `48px` / `3rem` | Section margins |
-| `--space-3xl` | `64px` / `4rem` | Hero padding |
+| `--space-xs` | `4px` | Tight gaps |
+| `--space-sm` | `8px` | Icon gaps, inline spacing |
+| `--space-md` | `16px` | Standard padding |
+| `--space-lg` | `24px` | Section padding |
+| `--space-xl` | `32px` | Large gaps |
+| `--space-2xl` | `48px` | Section margins |
+| `--space-3xl` | `64px` | Hero padding |
 
-### Shadow Depths
+### Elevation
 
-| Level | Value | Usage |
-|-------|-------|-------|
-| `--shadow-sm` | `0 1px 2px rgba(0,0,0,0.05)` | Subtle lift |
-| `--shadow-md` | `0 4px 6px rgba(0,0,0,0.1)` | Cards, buttons |
-| `--shadow-lg` | `0 10px 15px rgba(0,0,0,0.1)` | Modals, dropdowns |
-| `--shadow-xl` | `0 20px 25px rgba(0,0,0,0.15)` | Hero images, featured cards |
+On a near-black background, drop shadows barely read. **Elevate with surface colour
+and border first, shadow second.**
+
+| Level | Technique | Usage |
+|-------|-----------|-------|
+| `flat` | `#111827` surface, no border | Background panels |
+| `raised` | `#111827` + `1px #27405A` border | Cards, list items |
+| `active` | `#182234` + `1px` gold-tinted border | Selected / focused card |
+| `overlay` | `#182234` + border + `0 10px 30px rgba(0,0,0,0.5)` | Modals, sheets |
+
+Glow is the preferred emphasis on dark: a soft gold outer glow on a CTA reads far
+better than a black shadow.
+
+### Pixel Art — the 20% rule
+
+Pixel art is a **texture, not a theme**. Hard ceiling: ~20% of any screen's visual weight.
+
+**Allowed:** quest/place icons, badges, XP rewards, the vehicle marker on the route,
+journal stamps and frames, empty states, celebration and transition moments.
+
+**Banned:** body text, form fields, buttons, navigation chrome, the map itself,
+anything on the Pilot's screen, anything under 24px.
+
+Render pixel assets at integer scales with nearest-neighbour filtering
+(`resizeMode` + no smoothing). Blurry pixel art is worse than none.
 
 ---
 
 ## Component Specs
+
+> Structure and properties below are unchanged from the original generated system.
+> Only the colour values have been corrected to the real palette.
 
 ### Buttons
 
 ```css
 /* Primary Button */
 .btn-primary {
-  background: #D97706;
-  color: white;
+  background: #D8B477;
+  color: #080B12;
   padding: 12px 24px;
   border-radius: 8px;
   font-weight: 600;
   transition: all 200ms ease;
-  cursor: pointer;
 }
 
-.btn-primary:hover {
+.btn-primary:active {
   opacity: 0.9;
   transform: translateY(-1px);
 }
@@ -90,31 +133,32 @@
 /* Secondary Button */
 .btn-secondary {
   background: transparent;
-  color: #EA580C;
-  border: 2px solid #EA580C;
+  color: #F0D7AA;
+  border: 1px solid #27405A;
   padding: 12px 24px;
   border-radius: 8px;
   font-weight: 600;
   transition: all 200ms ease;
-  cursor: pointer;
 }
 ```
+
+Minimum touch target **44×44pt**. On any Pilot-facing surface, minimum **56pt** height
+and 18px+ label.
 
 ### Cards
 
 ```css
 .card {
-  background: #FFF7ED;
+  background: #111827;
+  border: 1px solid #27405A;
   border-radius: 12px;
   padding: 24px;
-  box-shadow: var(--shadow-md);
   transition: all 200ms ease;
-  cursor: pointer;
 }
 
-.card:hover {
-  box-shadow: var(--shadow-lg);
-  transform: translateY(-2px);
+.card:active {
+  background: #182234;
+  border-color: #D8B477;
 }
 ```
 
@@ -122,35 +166,39 @@
 
 ```css
 .input {
+  background: #0C1018;
+  color: #F5F1E8;
   padding: 12px 16px;
-  border: 1px solid #E2E8F0;
+  border: 1px solid #27405A;
   border-radius: 8px;
   font-size: 16px;
   transition: border-color 200ms ease;
 }
 
 .input:focus {
-  border-color: #EA580C;
+  border-color: #D8B477;
   outline: none;
-  box-shadow: 0 0 0 3px #EA580C20;
+  box-shadow: 0 0 0 3px rgba(216, 180, 119, 0.25);
 }
 ```
 
-### Modals
+### Modals / Sheets
+
+Prefer a **bottom sheet** over a centred modal — one-handed reach matters in a car.
 
 ```css
 .modal-overlay {
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(8, 11, 18, 0.72);
   backdrop-filter: blur(4px);
 }
 
 .modal {
-  background: white;
-  border-radius: 16px;
+  background: #182234;
+  border: 1px solid #27405A;
+  border-radius: 16px 16px 0 0;
   padding: 32px;
-  box-shadow: var(--shadow-xl);
-  max-width: 500px;
-  width: 90%;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+  width: 100%;
 }
 ```
 
@@ -158,37 +206,43 @@
 
 ## Style Guidelines
 
-**Style:** Pixel Art
+**Style:** Warm dark UI with retro pixel accents
 
-**Keywords:** Retro, 8-bit, 16-bit, gaming, blocky, nostalgic, pixelated, arcade
+**Keywords:** Night drive, dashboard glow, parchment and gold, calm, legible, tactile,
+chunky pixel highlights against crisp modern chrome
 
-**Best For:** Indie games, retro tools, creative portfolios, nostalgia marketing, Web3/NFT
+**Best For:** Mobile travel companions, co-op experiences, journaling, glanceable in-car UI
 
-**Key Effects:** Frame-by-frame sprite animation, blinking cursor, instant transitions, marquee text
+**Key Effects:** Surface-and-border elevation, soft gold glow on emphasis, nearest-neighbour
+pixel icons, restrained purposeful motion
 
-### Page Pattern
+### Screen Pattern
 
-**Pattern Name:** Immersive/Interactive Experience
+**Pattern Name:** Glanceable HUD + decisive offer
 
-- **Conversion Strategy:** 40% higher engagement. Performance trade-off. Provide skip option. Mobile fallback essential.
-- **CTA Placement:** After interaction complete + Skip option for impatient users
-- **Section Order:** 1. Full-screen interactive element, 2. Guided product tour, 3. Key benefits revealed, 4. CTA after completion
+- **Strategy:** The current state of the trip is always readable in under a second.
+  Decisions arrive as few, clear offers — never as a scrolling feed.
+- **CTA Placement:** One primary action, bottom, thumb-reachable. Never two competing golds.
+- **Section Order:** 1. Where you are / progress, 2. The live decision (if any),
+  3. Party state, 4. What you've collected so far.
 
 ---
 
 ## Anti-Patterns (Do NOT Use)
 
-- ❌ Inconsistent styling
-- ❌ Poor contrast ratios
-
-### Additional Forbidden Patterns
-
-- ❌ **Emojis as icons** — Use SVG icons (Heroicons, Lucide, Simple Icons)
-- ❌ **Missing cursor:pointer** — All clickable elements must have cursor:pointer
-- ❌ **Layout-shifting hovers** — Avoid scale transforms that shift layout
-- ❌ **Low contrast text** — Maintain 4.5:1 minimum contrast ratio
-- ❌ **Instant state changes** — Always use transitions (150-300ms)
-- ❌ **Invisible focus states** — Focus states must be visible for a11y
+- ❌ **Light mode** — the app is dark-only by design
+- ❌ **Pink, pure white `#FFFFFF`, or generic SaaS grey** — off-identity
+- ❌ **Pixel art above ~20%** of a screen, or in text, inputs, or Pilot-facing UI
+- ❌ **Fantasy-RPG copy** — no tavern, riddle, buff, gold, adventurer (see `docs/identity.md`)
+- ❌ **Scrolling feeds of places** — we are not a review app
+- ❌ **Turn-by-turn navigation UI** — we are not a map
+- ❌ **Public share surfaces** — the journal is party-private and enforced in the DB
+- ❌ **Emojis as icons** — use SF Symbols / a consistent set, or pixel icons
+- ❌ **Small tap targets** (< 44pt, < 56pt for Pilot)
+- ❌ **Layout-shifting animations**
+- ❌ **Low contrast text** — 4.5:1 minimum on dark
+- ❌ **Instant state changes** — always transition (150–300ms)
+- ❌ **Invisible focus/pressed states**
 
 ---
 
@@ -196,13 +250,14 @@
 
 Before delivering any UI code, verify:
 
-- [ ] No emojis used as icons (use SVG instead)
-- [ ] All icons from consistent icon set (Heroicons/Lucide)
-- [ ] `cursor-pointer` on all clickable elements
-- [ ] Hover states with smooth transitions (150-300ms)
-- [ ] Light mode: text contrast 4.5:1 minimum
-- [ ] Focus states visible for keyboard navigation
-- [ ] `prefers-reduced-motion` respected
-- [ ] Responsive: 375px, 768px, 1024px, 1440px
-- [ ] No content hidden behind fixed navbars
-- [ ] No horizontal scroll on mobile
+- [ ] Colours come from `SideQuestColors` in `src/constants/theme.ts` — no hardcoded hex
+- [ ] No pure `#FFFFFF`; parchment `#F5F1E8` for foreground
+- [ ] Pixel art ≤ ~20% of the screen, integer-scaled, none in text or inputs
+- [ ] Copy passes the `docs/identity.md` voice table — no fantasy-RPG language
+- [ ] Pilot-facing surfaces: 56pt+ targets, 18px+ text, one decision max
+- [ ] Text contrast ≥ 4.5:1 against the dark surface it sits on
+- [ ] Pressed states on every touchable, with a 150–300ms transition
+- [ ] `prefers-reduced-motion` / `AccessibilityInfo.isReduceMotionEnabled` respected
+- [ ] Accessibility labels on icon-only controls
+- [ ] Layout holds at 375px width and at largest Dynamic Type setting
+- [ ] Safe-area insets respected; nothing hidden behind the tab bar

@@ -28,6 +28,26 @@ export async function signOut() {
   if (error) throw error;
 }
 
+export async function sendPasswordReset(email: string) {
+  const { error } = await supabase.auth.resetPasswordForEmail(email.trim().toLowerCase(), {
+    redirectTo: 'sidequest://reset-password',
+  });
+  if (error) throw error;
+}
+
+export async function updateDisplayName(userId: string, displayName: string) {
+  const nextName = displayName.trim();
+  if (nextName.length < 1 || nextName.length > 40) {
+    throw new Error('Display name must be between 1 and 40 characters.');
+  }
+
+  const { error } = await supabase
+    .from('profiles')
+    .update({ display_name: nextName, updated_at: new Date().toISOString() })
+    .eq('id', userId);
+  if (error) throw error;
+}
+
 export async function getAuthenticatedUserId() {
   const { data, error } = await supabase.auth.getClaims();
   if (error) throw error;
