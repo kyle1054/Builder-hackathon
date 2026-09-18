@@ -1,6 +1,6 @@
 import { router } from 'expo-router';
 import { SymbolView } from 'expo-symbols';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { ActivityIndicator, Pressable, StyleSheet, Text, TextInput, View } from 'react-native';
 
 import { AuthGate } from '@/components/auth-gate';
@@ -8,6 +8,25 @@ import { BodyText, Eyebrow, PixelButton, QuestScreen, SectionHeading, Surface, T
 import { SideQuestColors } from '@/constants/theme';
 import { useAuth } from '@/context/auth';
 import { signOut, updateDisplayName } from '@/services/auth';
+import { getTravelerRoleStats, TravelerRoleStats } from '@/services/sidequest-api';
+
+const emptyRoleStats: TravelerRoleStats = {
+  pilotDistanceM: 0,
+  navigatorDistanceM: 0,
+  pilotSeconds: 0,
+  navigatorSeconds: 0,
+  journeysCount: 0,
+};
+
+function formatDistance(meters: number) {
+  return `${(meters / 1000).toFixed(meters >= 100000 ? 0 : 1)} km`;
+}
+
+function formatDuration(seconds: number) {
+  const hours = Math.floor(seconds / 3600);
+  const minutes = Math.round((seconds % 3600) / 60);
+  return hours > 0 ? `${hours}h ${minutes}m` : `${minutes}m`;
+}
 
 function ProfileContent() {
   const { session, profile, refreshProfile } = useAuth();
@@ -16,7 +35,19 @@ function ProfileContent() {
   const [name, setName] = useState(displayName);
   const [saving, setSaving] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [roleStats, setRoleStats] = useState<TravelerRoleStats>(emptyRoleStats);
+  const [statsLoading, setStatsLoading] = useState(true);
   const initials = displayName.split(' ').map((part) => part[0]).join('').slice(0, 2).toUpperCase();
+
+  useEffect(() => {
+    if (!session) return;
+    let active = true;
+    getTravelerRoleStats(session.user.id)
+      .then((stats) => { if (active) setRoleStats(stats); })
+      .catch(() => { if (active) setRoleStats(emptyRoleStats); })
+      .finally(() => { if (active) setStatsLoading(false); });
+    return () => { active = false; };
+  }, [session]);
 
   const save = async () => {
     if (!session) return;
@@ -46,7 +77,27 @@ function ProfileContent() {
         )}
       </Surface>
 
-      <View style={styles.section}><SectionHeading title="Lifetime journey" /><Surface style={styles.stats}>{[['1,240', 'Total XP'], ['310', 'Gold'], ['7', 'Journeys']].map(([value, label]) => <View key={label} style={styles.stat}><Text style={styles.statValue}>{value}</Text><Text style={styles.statLabel}>{label}</Text></View>)}</Surface></View>
+      <View style={styles.section}>
+        <SectionHeading title="Role record" action={<Text style={styles.journeyCount}>{roleStats.journeysCount} journeys</Text>} />
+        <Surface>
+          {statsLoading ? <ActivityIndicator color={SideQuestColors.gold} /> : (
+            <>
+              <View style={styles.roleStatRow}>
+                <View style={styles.roleStatIcon}><SymbolView name={{ ios: 'steeringwheel', android: 'directions_car', web: 'directions_car' }} tintColor={SideQuestColors.cobalt} size={22} /></View>
+                <View style={styles.roleStatCopy}><Text style={styles.roleStatLabel}>As Pilot</Text><Text style={styles.roleStatValue}>{formatDistance(roleStats.pilotDistanceM)} driven</Text></View>
+                <Text style={styles.roleTime}>{formatDuration(roleStats.pilotSeconds)}</Text>
+              </View>
+              <View style={styles.divider} />
+              <View style={styles.roleStatRow}>
+                <View style={[styles.roleStatIcon, styles.navigatorIcon]}><SymbolView name={{ ios: 'map.fill', android: 'map', web: 'map' }} tintColor={SideQuestColors.goldSoft} size={22} /></View>
+                <View style={styles.roleStatCopy}><Text style={styles.roleStatLabel}>As Navigator</Text><Text style={styles.roleStatValue}>{formatDistance(roleStats.navigatorDistanceM)} navigated</Text></View>
+                <Text style={styles.roleTime}>{formatDuration(roleStats.navigatorSeconds)}</Text>
+              </View>
+            </>
+          )}
+          {!statsLoading && roleStats.journeysCount === 0 && <Text style={styles.statsEmpty}>Distance starts counting after the second accepted route sample.</Text>}
+        </Surface>
+      </View>
 
       <View style={styles.section}><SectionHeading title="Traveler traits" /><Surface>
         <View style={styles.trait}><View style={[styles.traitIcon, { backgroundColor: 'rgba(117,198,157,0.1)' }]}><SymbolView name={{ ios: 'figure.walk', android: 'directions_walk', web: 'directions_walk' }} tintColor={SideQuestColors.emerald} size={20} /></View><View style={styles.traitCopy}><Text style={styles.traitTitle}>Steady endurance</Text><Text style={styles.traitText}>Your demo stamina depletes at the standard rate.</Text></View></View>
@@ -72,5 +123,5 @@ const styles = StyleSheet.create({
   header: { flexDirection: 'row', alignItems: 'flex-start', gap: 12 }, headerCopy: { flex: 1, gap: 5 }, editIcon: { width: 44, height: 44, borderRadius: 15, backgroundColor: 'rgba(216,180,119,0.1)', alignItems: 'center', justifyContent: 'center' },
   identityCard: { flexDirection: 'row', alignItems: 'center', gap: 16, borderColor: 'rgba(216,180,119,0.28)' }, avatar: { width: 78, height: 78, borderRadius: 25, backgroundColor: 'rgba(216,180,119,0.12)', alignItems: 'center', justifyContent: 'center' }, initials: { color: SideQuestColors.goldSoft, fontFamily: 'Georgia', fontSize: 25, fontWeight: '700' }, levelBadge: { position: 'absolute', right: -5, bottom: -5, width: 28, height: 28, borderRadius: 14, backgroundColor: SideQuestColors.gold, borderWidth: 3, borderColor: SideQuestColors.surface, alignItems: 'center', justifyContent: 'center' }, levelText: { color: SideQuestColors.ink, fontSize: 10, fontWeight: '800' }, identityCopy: { flex: 1 }, name: { color: SideQuestColors.white, fontFamily: 'Georgia', fontSize: 23 }, email: { color: SideQuestColors.textMuted, fontSize: 11, marginTop: 5 }, titlePill: { alignSelf: 'flex-start', borderRadius: 999, backgroundColor: 'rgba(127,168,201,0.1)', paddingHorizontal: 10, paddingVertical: 6, marginTop: 10 }, titlePillText: { color: SideQuestColors.cobalt, fontSize: 10, fontWeight: '700' },
   editArea: { flex: 1, gap: 8 }, inputLabel: { color: SideQuestColors.textMuted, fontSize: 11, fontWeight: '600' }, input: { minHeight: 48, borderRadius: 13, borderWidth: 1, borderColor: SideQuestColors.borderStrong, backgroundColor: SideQuestColors.ink, color: SideQuestColors.white, paddingHorizontal: 13, fontSize: 15 }, error: { color: '#F0A1A8', fontSize: 11 }, editActions: { flexDirection: 'row', gap: 8 }, cancel: { minHeight: 43, paddingHorizontal: 12, alignItems: 'center', justifyContent: 'center' }, cancelText: { color: SideQuestColors.textMuted, fontSize: 12, fontWeight: '600' }, save: { flex: 1, minHeight: 43, borderRadius: 12, backgroundColor: SideQuestColors.gold, alignItems: 'center', justifyContent: 'center' }, saveText: { color: SideQuestColors.ink, fontSize: 12, fontWeight: '700' },
-  section: { gap: 10 }, stats: { flexDirection: 'row', paddingVertical: 22 }, stat: { flex: 1, alignItems: 'center' }, statValue: { color: SideQuestColors.white, fontFamily: 'Georgia', fontSize: 22 }, statLabel: { color: SideQuestColors.textDim, fontSize: 9, textTransform: 'uppercase', marginTop: 4 }, trait: { flexDirection: 'row', alignItems: 'center', gap: 12 }, traitIcon: { width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center' }, traitCopy: { flex: 1 }, traitTitle: { color: SideQuestColors.white, fontSize: 13, fontWeight: '700' }, traitText: { color: SideQuestColors.textMuted, fontSize: 11, lineHeight: 17, marginTop: 3 }, divider: { height: 1, backgroundColor: SideQuestColors.border }, setting: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 }, settingTitle: { color: SideQuestColors.white, fontSize: 13, fontWeight: '700' }, settingText: { color: SideQuestColors.textMuted, fontSize: 11, lineHeight: 17, marginTop: 3, maxWidth: 280 }, onPill: { borderRadius: 999, backgroundColor: 'rgba(117,198,157,0.12)', paddingHorizontal: 11, paddingVertical: 6 }, onText: { color: SideQuestColors.emerald, fontSize: 10, fontWeight: '700' }, version: { color: SideQuestColors.textDim, fontSize: 9, letterSpacing: 1.2, textAlign: 'center' },
+  section: { gap: 10 }, journeyCount: { color: SideQuestColors.textMuted, fontSize: 11 }, roleStatRow: { flexDirection: 'row', alignItems: 'center', gap: 12 }, roleStatIcon: { width: 46, height: 46, borderRadius: 15, backgroundColor: 'rgba(127,168,201,0.11)', alignItems: 'center', justifyContent: 'center' }, navigatorIcon: { backgroundColor: 'rgba(216,180,119,0.11)' }, roleStatCopy: { flex: 1 }, roleStatLabel: { color: SideQuestColors.textMuted, fontSize: 11, fontWeight: '600' }, roleStatValue: { color: SideQuestColors.white, fontFamily: 'Georgia', fontSize: 19, marginTop: 3 }, roleTime: { color: SideQuestColors.textDim, fontSize: 11, fontVariant: ['tabular-nums'] }, statsEmpty: { color: SideQuestColors.textDim, fontSize: 11, lineHeight: 17, textAlign: 'center' }, trait: { flexDirection: 'row', alignItems: 'center', gap: 12 }, traitIcon: { width: 44, height: 44, borderRadius: 14, alignItems: 'center', justifyContent: 'center' }, traitCopy: { flex: 1 }, traitTitle: { color: SideQuestColors.white, fontSize: 13, fontWeight: '700' }, traitText: { color: SideQuestColors.textMuted, fontSize: 11, lineHeight: 17, marginTop: 3 }, divider: { height: 1, backgroundColor: SideQuestColors.border }, setting: { flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between', gap: 12 }, settingTitle: { color: SideQuestColors.white, fontSize: 13, fontWeight: '700' }, settingText: { color: SideQuestColors.textMuted, fontSize: 11, lineHeight: 17, marginTop: 3, maxWidth: 280 }, onPill: { borderRadius: 999, backgroundColor: 'rgba(117,198,157,0.12)', paddingHorizontal: 11, paddingVertical: 6 }, onText: { color: SideQuestColors.emerald, fontSize: 10, fontWeight: '700' }, version: { color: SideQuestColors.textDim, fontSize: 9, letterSpacing: 1.2, textAlign: 'center' },
 });

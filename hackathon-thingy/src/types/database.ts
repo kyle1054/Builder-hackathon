@@ -127,6 +127,47 @@ export type Database = {
           },
         ]
       }
+      journey_member_stats: {
+        Row: {
+          journey_id: string
+          navigator_distance_m: number
+          navigator_seconds: number
+          pilot_distance_m: number
+          pilot_seconds: number
+          position_segments: number
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          journey_id: string
+          navigator_distance_m?: number
+          navigator_seconds?: number
+          pilot_distance_m?: number
+          pilot_seconds?: number
+          position_segments?: number
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          journey_id?: string
+          navigator_distance_m?: number
+          navigator_seconds?: number
+          pilot_distance_m?: number
+          pilot_seconds?: number
+          position_segments?: number
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "journey_member_stats_journey_id_fkey"
+            columns: ["journey_id"]
+            isOneToOne: false
+            referencedRelation: "journeys"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       journey_quests: {
         Row: {
           accepted_at: string | null
@@ -545,7 +586,17 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      traveler_role_totals: {
+        Row: {
+          journeys_count: number | null
+          navigator_distance_m: number | null
+          navigator_seconds: number | null
+          pilot_distance_m: number | null
+          pilot_seconds: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
     }
     Functions: {
       create_photo_upload: {

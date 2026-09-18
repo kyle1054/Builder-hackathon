@@ -29,6 +29,31 @@ export type PhotoReservation = RpcSuccess<{
   storage_path: string;
 }>;
 
+export type TravelerRoleStats = {
+  pilotDistanceM: number;
+  navigatorDistanceM: number;
+  pilotSeconds: number;
+  navigatorSeconds: number;
+  journeysCount: number;
+};
+
+export async function getTravelerRoleStats(userId: string): Promise<TravelerRoleStats> {
+  const { data, error } = await supabase
+    .from('traveler_role_totals')
+    .select('pilot_distance_m,navigator_distance_m,pilot_seconds,navigator_seconds,journeys_count')
+    .eq('user_id', userId)
+    .maybeSingle();
+
+  if (error) throw error;
+  return {
+    pilotDistanceM: data?.pilot_distance_m ?? 0,
+    navigatorDistanceM: data?.navigator_distance_m ?? 0,
+    pilotSeconds: data?.pilot_seconds ?? 0,
+    navigatorSeconds: data?.navigator_seconds ?? 0,
+    journeysCount: data?.journeys_count ?? 0,
+  };
+}
+
 export async function createTrip(input: {
   partyName: string;
   originName: string;
