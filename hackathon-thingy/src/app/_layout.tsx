@@ -1,18 +1,33 @@
-import { DarkTheme, DefaultTheme, ThemeProvider } from 'expo-router';
-import * as SplashScreen from 'expo-splash-screen';
-import { useColorScheme } from 'react-native';
+import { DarkTheme, ThemeProvider } from 'expo-router';
+import { StatusBar } from 'expo-status-bar';
+import { initialWindowMetrics, SafeAreaProvider } from 'react-native-safe-area-context';
 
-import { AnimatedSplashOverlay } from '@/components/animated-icon';
 import AppTabs from '@/components/app-tabs';
+import { SideQuestColors } from '@/constants/theme';
+import { DemoJourneyProvider } from '@/context/demo-journey';
 
-SplashScreen.preventAutoHideAsync();
+const sideQuestTheme = {
+  ...DarkTheme,
+  colors: {
+    ...DarkTheme.colors,
+    primary: SideQuestColors.gold,
+    background: SideQuestColors.void,
+    card: SideQuestColors.ink,
+    text: SideQuestColors.white,
+    border: SideQuestColors.white,
+    notification: SideQuestColors.red,
+  },
+};
 
-export default function TabLayout() {
-  const colorScheme = useColorScheme();
+export default function RootLayout() {
   return (
-    <ThemeProvider value={colorScheme === 'dark' ? DarkTheme : DefaultTheme}>
-      <AnimatedSplashOverlay />
-      <AppTabs />
-    </ThemeProvider>
+    <SafeAreaProvider initialMetrics={initialWindowMetrics}>
+      <ThemeProvider value={sideQuestTheme}>
+        <DemoJourneyProvider>
+          <StatusBar style="light" />
+          <AppTabs />
+        </DemoJourneyProvider>
+      </ThemeProvider>
+    </SafeAreaProvider>
   );
 }

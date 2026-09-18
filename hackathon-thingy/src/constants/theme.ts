@@ -9,19 +9,36 @@ import { Platform } from 'react-native';
 
 export const Colors = {
   light: {
-    text: '#000000',
-    background: '#ffffff',
-    backgroundElement: '#F0F0F3',
-    backgroundSelected: '#E0E1E6',
-    textSecondary: '#60646C',
+    text: '#FFFFFF',
+    background: '#05051A',
+    backgroundElement: '#000066',
+    backgroundSelected: '#12128F',
+    textSecondary: '#C5C9E8',
   },
   dark: {
-    text: '#ffffff',
-    background: '#000000',
-    backgroundElement: '#212225',
-    backgroundSelected: '#2E3135',
-    textSecondary: '#B0B4BA',
+    text: '#FFFFFF',
+    background: '#05051A',
+    backgroundElement: '#000066',
+    backgroundSelected: '#12128F',
+    textSecondary: '#C5C9E8',
   },
+} as const;
+
+export const SideQuestColors = {
+  void: '#05051A',
+  ink: '#090912',
+  navy: '#000066',
+  navyBright: '#000088',
+  cobaltDark: '#102C67',
+  cobalt: '#3399FF',
+  emerald: '#00E765',
+  amber: '#FFB800',
+  gold: '#FFD700',
+  red: '#FF3344',
+  white: '#FFFFFF',
+  textMuted: '#C5C9E8',
+  textDim: '#858BB7',
+  road: '#737AA6',
 } as const;
 
 export type ThemeColor = keyof typeof Colors.light & keyof typeof Colors.dark;
